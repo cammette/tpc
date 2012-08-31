@@ -19,7 +19,7 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 		TravelskyParallelComputerInterface<P> {
 
 	public static final String ParallelComputerSpringBean = "P_C_S";
-
+	
 	private TaskParallelClientInterface taskParallelClientInterface;
 
 	public TaskParallelClientInterface getTaskParallelClientInterface() {
@@ -33,25 +33,22 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 
 	@Override
 	public void excuteAsyn(P p) {
-		String batchNo = this.getTaskBatchNo(p);
-		List<Object> taskList = mergerTask(p);
-		Map<String, String> messageProperties = new HashMap<String, String>();
-		messageProperties.put(ParallelComputerSpringBean,
-				this.getParallelComputerSpringBeanName());
-		this.taskParallelClientInterface.excuteAsyn(taskList, batchNo,
-				messageProperties);
+		this.taskParallelClientInterface.excuteAsyn( mergerTask(p), getTaskBatchNo(p),
+				genProperties(p));
 	}
 
 	@Override
 	public TaskResult excuteSyn(P p, long timeout)
 			throws TaskExcutedReplyTimeoutException {
-		String batchNo = this.getTaskBatchNo(p);
-		List<Object> taskList = mergerTask(p);
+		return this.taskParallelClientInterface.excuteSync(mergerTask(p), getTaskBatchNo(p),
+				timeout, genProperties(p));
+	}
+	private Map<String, String> genProperties(P p){
 		Map<String, String> messageProperties = new HashMap<String, String>();
 		messageProperties.put(ParallelComputerSpringBean,
 				this.getParallelComputerSpringBeanName());
-		return this.taskParallelClientInterface.excuteSync(taskList, batchNo,
-				timeout, messageProperties);
+		messageProperties.putAll(getTaskBindMap(p));
+		return messageProperties;
 	}
 
 	private List<Object> mergerTask(P p) {
@@ -87,6 +84,13 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 	 * @return
 	 */
 	protected abstract String getTaskBatchNo(P p);
+	
+	/**
+	 * 获取批次号绑定的对象
+	 * @param p
+	 * @return
+	 */
+	protected abstract Map<String,String> getTaskBindMap(P p);
 
 	/**
 	 * 定义任务单元的执行逻辑

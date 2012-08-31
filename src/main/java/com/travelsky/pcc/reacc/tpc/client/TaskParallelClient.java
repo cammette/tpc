@@ -42,7 +42,7 @@ public class TaskParallelClient implements TaskParallelClientInterface {
 
 	@Override
 	public void excuteAsyn(List<Object> tasks, String batchNo,Map<String, String> messageProperties) {
-		String springBean =messageProperties.get( TravelskyParallelComputerTemplate.ParallelComputerSpringBean);
+		String springBean = messageProperties.get( TravelskyParallelComputerTemplate.ParallelComputerSpringBean);
 		taskContextManager.addTaskResult(batchNo, tasks.size(),springBean);
 		for (Object task : tasks) {
 			senderAndReplyService.send((Serializable) task, batchNo,messageProperties);
@@ -52,7 +52,7 @@ public class TaskParallelClient implements TaskParallelClientInterface {
 	@Override
 	public TaskResult excuteSync(List<Object> tasks, String batchNo,
 			long excuteTimeout,Map<String, String> messageProperties) throws TaskExcutedReplyTimeoutException {
-		String springBean =messageProperties.get(TravelskyParallelComputerTemplate.ParallelComputerSpringBean);
+		String springBean = messageProperties.get(TravelskyParallelComputerTemplate.ParallelComputerSpringBean);
 		taskContextManager.addTaskResult(batchNo, tasks.size(),false,springBean);
 		for (Object task : tasks) {
 			senderAndReplyService.send((Serializable) task, batchNo,messageProperties);

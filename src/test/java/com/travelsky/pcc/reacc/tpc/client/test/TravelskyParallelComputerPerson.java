@@ -1,11 +1,15 @@
-package com.travelsky.pcc.reacc.tpc.client;
+package com.travelsky.pcc.reacc.tpc.client.test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
+import com.travelsky.pcc.reacc.tpc.client.TaskGroup;
+import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate;
 
 public class TravelskyParallelComputerPerson extends
 		TravelskyParallelComputerTemplate<Integer, Person, ReturnBean> {
@@ -45,6 +49,17 @@ public class TravelskyParallelComputerPerson extends
 	@Override
 	public void join(TaskResult taskResult) {
 		log.info("results size:"+taskResult.getTaskUnitResults().size());
+		List list = taskResult.getTaskUnitResults();
 	}
 
+	@Override
+	protected Map<String, String> getTaskBindMap(Integer p) {
+		Map<String, String> map = new HashMap<String, String>(){{
+			put("aa","bb");
+			put("cc","dd");
+		}};
+		return map;
+	}
+
+	
 }

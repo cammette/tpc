@@ -1,10 +1,14 @@
-package com.travelsky.pcc.reacc.tpc.client;
+package com.travelsky.pcc.reacc.tpc.client.test;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
+import com.travelsky.pcc.reacc.tpc.client.TaskGroup;
+import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate;
 
 public class TravelskyParallelComputer extends
 		TravelskyParallelComputerTemplate<Integer, String, String> {
@@ -40,5 +44,13 @@ public class TravelskyParallelComputer extends
 			System.out.println(taskUnitResult.getTaskResult());
 		}
 	}
+
+	@Override
+	protected Map<String, String> getTaskBindMap(Integer p) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 
 }

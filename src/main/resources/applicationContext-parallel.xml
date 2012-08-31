@@ -122,9 +122,6 @@
 		<property name="taskParallelClientInterface" ref="taskParallelClientInterface"></property>
 	</bean>
 
-	<bean id="travelskyParallelComputer"
-		class="com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputer" parent="travelskyParallelComputerTemplate">
-	</bean>
 
 </beans>
     

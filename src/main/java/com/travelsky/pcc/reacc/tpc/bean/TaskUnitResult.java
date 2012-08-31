@@ -1,6 +1,7 @@
 package com.travelsky.pcc.reacc.tpc.bean;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * 代表一个任务单元执行的结果
@@ -34,6 +35,13 @@ public class TaskUnitResult implements Serializable {
     * 任务批次号
     */
 	private String batchNo;
+	
+	/**
+	 * 绑定到task的轻量级属性
+	 */
+	private Map<String,String> taskBindProperties;
+
+	
 
 	public TaskUnitResult() {
 		super();
@@ -87,4 +95,12 @@ public class TaskUnitResult implements Serializable {
 		this.batchNo = batchNo;
 	}
 
+	public Map<String, String> getTaskBindProperties() {
+		return taskBindProperties;
+	}
+
+	public void setTaskBindProperties(Map<String, String> taskBindProperties) {
+		this.taskBindProperties = taskBindProperties;
+	}
+	
 }

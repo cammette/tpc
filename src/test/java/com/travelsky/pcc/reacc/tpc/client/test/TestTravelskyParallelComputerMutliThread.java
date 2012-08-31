@@ -1,4 +1,4 @@
-package com.travelsky.pcc.reacc.tpc.client;
+package com.travelsky.pcc.reacc.tpc.client.test;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

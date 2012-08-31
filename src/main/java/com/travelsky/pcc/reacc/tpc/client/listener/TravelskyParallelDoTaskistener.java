@@ -1,6 +1,9 @@
 package com.travelsky.pcc.reacc.tpc.client.listener;
 
 import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -17,6 +20,7 @@ import com.travelsky.pcc.reacc.tpc.AbstractTaskListener;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedException;
+import com.travelsky.pcc.reacc.tpc.jms.JMSService;
 
 /**
  * 实现了任务单元执行的逻辑：
@@ -36,7 +40,19 @@ public class TravelskyParallelDoTaskistener extends AbstractTaskListener impleme
 	protected TaskUnitResult doMessage(Message msg, String batchNo) throws JMSException {
 		TaskUnitResult taskUnitResult = new TaskUnitResult();
 		taskUnitResult.setBatchNo(batchNo);
-		String springBeanName = msg.getStringProperty(TravelskyParallelComputerTemplate.ParallelComputerSpringBean);
+		String springBeanName = "";
+		Map<String, String> taskBindMap = new HashMap<String, String>();
+		String proName="";
+		for (Enumeration<String> e = msg.getPropertyNames(); e.hasMoreElements();){
+			 proName=e.nextElement();
+			 if(proName.equals(TravelskyParallelComputerTemplate.ParallelComputerSpringBean)){
+				 springBeanName = msg.getStringProperty(proName);
+			 }
+			 else if(!proName.equals(JMSService.BATCH_NO)&&!proName.equals("JMSXDeliveryCount")){
+				 taskBindMap.put(proName, msg.getStringProperty(proName));
+			 }
+		}
+		taskUnitResult.setTaskBindProperties(taskBindMap);
 		Object taskBean = springContext.getBean(springBeanName);
 		Serializable paramObject = null; 
 		if (msg instanceof ObjectMessage) {

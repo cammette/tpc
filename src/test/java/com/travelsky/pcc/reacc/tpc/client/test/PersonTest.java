@@ -1,4 +1,4 @@
-package com.travelsky.pcc.reacc.tpc.client;
+package com.travelsky.pcc.reacc.tpc.client.test;
 
 import java.util.List;
 
@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
+import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerInterface;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedException;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "/person-test.xml" })

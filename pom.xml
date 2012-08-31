@@ -1,0 +1,185 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.travelsky.pss.reacc</groupId>
+	<artifactId>tpc</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>reacc_concurrent</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<spring.version>3.1.1.RELEASE</spring.version>
+		<!-- <spring.batch.version>2.1.8.RELEASE</spring.batch.version> -->
+		<junit.version>4.10</junit.version>
+		<slf4j.version>1.6.6</slf4j.version>
+		<log4j.version>1.2.17</log4j.version>
+		<hornetq.version>2.2.19.Final</hornetq.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<repositories>
+		<repository>
+			<id>JBoss Repo</id>
+			<url>https://repository.jboss.org/nexus/content/repositories/releases</url>
+			<name>JBoss Repo</name>
+		</repository>
+
+		<repository>
+			<id>spring-maven-release</id>
+			<name>Spring Maven Release Repository</name>
+			<url>http://maven.springframework.org/release</url>
+		</repository>
+		<repository>
+			<id>spring-maven-milestone</id>
+			<name>Spring Maven Milestone Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+		</repository>
+
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- spring batch -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.springframework.batch</groupId> -->
+		<!-- <artifactId>spring-batch-core</artifactId> -->
+		<!-- <version>${spring.batch.version}</version> -->
+		<!-- </dependency> -->
+
+		<!-- spring start -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+
+		<!-- spring end -->
+		<!-- log4j start -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<!-- log4j end -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<!-- hornetq start -->
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-bootstrap</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-core</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-core-client </artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-jms</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-jms-client</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-logging</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-logging</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-spring-integration</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.netty</groupId>
+			<artifactId>netty</artifactId>
+			<version>3.2.5.Final</version>
+		</dependency>
+
+		<!-- hornetq end -->
+		<dependency>
+			<groupId>org.jboss.javaee</groupId>
+			<artifactId>jboss-jms-api</artifactId>
+			<version>1.1.0.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-pool</groupId>
+			<artifactId>commons-pool</artifactId>
+			<version>1.6</version>
+		</dependency>
+
+	</dependencies>
+
+</project>
+	

@@ -15,6 +15,16 @@ public class JmsConnectionPool {
 	private GenericObjectPool<JmsConnectionSession> pool = null;
 
 	private ConnectionFactory connectionFactory;
+	
+	private int acknowledgeMode = -1;
+	
+	public int getAcknowledgeMode() {
+		return acknowledgeMode;
+	}
+
+	public void setAcknowledgeMode(int acknowledgeMode) {
+		this.acknowledgeMode = acknowledgeMode;
+	}
 
 	private Integer maxConnection;
 	
@@ -37,8 +47,13 @@ public class JmsConnectionPool {
 	}
 
 	public void init() {
-		pool = new GenericObjectPool<JmsConnectionSession>(new JmsConnectionSessionFactory(
-				connectionFactory));
+		if(acknowledgeMode>0){
+			pool = new GenericObjectPool<JmsConnectionSession>(new JmsConnectionSessionFactory(
+					connectionFactory,acknowledgeMode));
+		}else{
+			pool = new GenericObjectPool<JmsConnectionSession>(new JmsConnectionSessionFactory(
+					connectionFactory));
+		}
 		pool.setMaxActive(maxConnection);
 		pool.setMaxIdle(maxConnection);
 		pool.setTestOnBorrow(true);

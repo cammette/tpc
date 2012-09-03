@@ -15,16 +15,26 @@ import org.hornetq.jms.client.HornetQSession;
 public class JmsConnectionSessionFactory implements PoolableObjectFactory<JmsConnectionSession> {
 
 	private ConnectionFactory connectionFactory;
+	
+	private int acknowledgeMode = Session.AUTO_ACKNOWLEDGE;
+	
+
+	public JmsConnectionSessionFactory(ConnectionFactory connectionFactory,
+			int acknowledgeMode) {
+		this.connectionFactory = connectionFactory;
+		this.acknowledgeMode = acknowledgeMode;
+	}
+	
 
 	public JmsConnectionSessionFactory(ConnectionFactory connectionFactory) {
-		super();
 		this.connectionFactory = connectionFactory;
 	}
+
 
 	@Override
 	public JmsConnectionSession makeObject() throws Exception {
 		Connection connection = connectionFactory.createConnection();
-		Session session = connection.createSession(false,Session.AUTO_ACKNOWLEDGE);
+		Session session = connection.createSession(false,acknowledgeMode);
 		return new JmsConnectionSession(session, connection);
 	}
 

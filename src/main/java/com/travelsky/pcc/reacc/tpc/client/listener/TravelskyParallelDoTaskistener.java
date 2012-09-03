@@ -37,6 +37,7 @@ public class TravelskyParallelDoTaskistener extends AbstractTaskListener impleme
 	private final static String doJoinTaskMethodName = "doTaskUnit";
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	protected TaskUnitResult doMessage(Message msg, String batchNo) throws JMSException {
 		TaskUnitResult taskUnitResult = new TaskUnitResult();
 		taskUnitResult.setBatchNo(batchNo);

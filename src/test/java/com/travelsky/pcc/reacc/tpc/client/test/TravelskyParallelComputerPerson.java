@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
+import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.client.TaskGroup;
 import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate;
 
@@ -49,7 +50,10 @@ public class TravelskyParallelComputerPerson extends
 	@Override
 	public void join(TaskResult taskResult) {
 		log.info("results size:"+taskResult.getTaskUnitResults().size());
-		List list = taskResult.getTaskUnitResults();
+		List<TaskUnitResult>  taskUnitResults = taskResult.getTaskUnitResults();
+		for (TaskUnitResult taskUnitResult : taskUnitResults) {
+			ReturnBean returnBean = (ReturnBean)taskUnitResult.getTaskResult();
+		}
 	}
 
 	@Override

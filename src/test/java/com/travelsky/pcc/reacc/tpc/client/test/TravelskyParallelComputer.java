@@ -45,12 +45,6 @@ public class TravelskyParallelComputer extends
 		}
 	}
 
-	@Override
-	protected Map<String, String> getTaskBindMap(Integer p) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	
 
 }

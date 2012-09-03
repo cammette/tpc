@@ -20,27 +20,19 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 
 	public static final String ParallelComputerSpringBean = "P_C_S";
 	
-	private TaskParallelClientInterface taskParallelClientInterface;
+	private TaskGroupParallelClientInterface<T> taskGroupParallelClientInterface;
 
-	public TaskParallelClientInterface getTaskParallelClientInterface() {
-		return taskParallelClientInterface;
-	}
-
-	public void setTaskParallelClientInterface(
-			TaskParallelClientInterface taskParallelClientInterface) {
-		this.taskParallelClientInterface = taskParallelClientInterface;
-	}
-
+	
 	@Override
 	public void excuteAsyn(P p) {
-		this.taskParallelClientInterface.excuteAsyn( mergerTask(p), getTaskBatchNo(p),
-				genProperties(p));
+		//this.taskGroupParallelClientInterface.excuteAsyn( this.split(p), getTaskBatchNo(p),
+			//	genProperties(p));
 	}
 
 	@Override
 	public TaskResult excuteSyn(P p, long timeout)
 			throws TaskExcutedReplyTimeoutException {
-		return this.taskParallelClientInterface.excuteSync(mergerTask(p), getTaskBatchNo(p),
+		return this.taskGroupParallelClientInterface.excuteSync(this.split(p), getTaskBatchNo(p),
 				timeout, genProperties(p));
 	}
 	private Map<String, String> genProperties(P p){
@@ -51,14 +43,14 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 		return messageProperties;
 	}
 
-	private List<Object> mergerTask(P p) {
-		List<TaskGroup<T>> taskGroups = this.split(p);
-		List<Object> taskList = new ArrayList<Object>();
-		for (TaskGroup<T> taskGroup : taskGroups) {
-			taskList.addAll(taskGroup);
-		}
-		return taskList;
-	}
+//	private List<Object> mergerTask(P p) {
+//		List<TaskGroup<T>> taskGroups = this.split(p);
+//		List<Object> taskList = new ArrayList<Object>();
+//		for (TaskGroup<T> taskGroup : taskGroups) {
+//			taskList.addAll(taskGroup);
+//		}
+//		return taskList;
+//	}
 	/**
 	 * 获取任务执行的springBeanName，默认是用户实现了该模板类的类名（第一个字母小写）
 	 * @return
@@ -106,4 +98,14 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 	 * @param taskResult
 	 */
 	public abstract void join(TaskResult taskResult);
+
+	public TaskGroupParallelClientInterface<T> getTaskGroupParallelClientInterface() {
+		return taskGroupParallelClientInterface;
+	}
+
+	public void setTaskGroupParallelClientInterface(
+			TaskGroupParallelClientInterface<T> taskGroupParallelClientInterface) {
+		this.taskGroupParallelClientInterface = taskGroupParallelClientInterface;
+	}
+	
 }

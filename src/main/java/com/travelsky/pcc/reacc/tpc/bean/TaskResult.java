@@ -124,6 +124,9 @@ public class TaskResult implements Serializable {
 	}
 
 	public List<TaskUnitResult> getTaskUnitResults() {
+		if(null == taskUnitResults){
+			taskUnitResults = new ArrayList<TaskUnitResult>();
+		}
 		return taskUnitResults;
 	}
 

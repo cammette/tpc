@@ -5,8 +5,8 @@
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<import resource="applicationContext-parallel.xml" />
-    <bean id="travelskyParallelComputerPerson" class="com.travelsky.pcc.reacc.tpc.client.test.TravelskyParallelComputerPerson">
-        <property name="taskParallelClientInterface" ref="taskParallelClientInterface"></property>
+    <bean id="travelskyParallelComputerPerson" parent="travelskyParallelComputerTemplate" class="com.travelsky.pcc.reacc.tpc.client.test.TravelskyParallelComputerPerson">
+	
 	</bean>
 </beans>
     

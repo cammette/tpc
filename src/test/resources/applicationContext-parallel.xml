@@ -6,7 +6,7 @@
 
 	<bean id="parallelProperty"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations" value="classpath:parallel/*.properties" />
+		<property name="locations" value="classpath:parallel.properties" />
 		<property name="systemPropertiesMode" value="2" />
 	</bean>
 
@@ -63,22 +63,25 @@
 		<property name="concurrentConsumers" value="${asyNotify.threadPool.size}" />
 		<property name="maxConcurrentConsumers" value="${asyNotify.threadPool.size}" />
 	</bean>
-
+	
 	<bean id="jmsConnectionPool" class="com.travelsky.pcc.reacc.tpc.jms.JmsConnectionPool"
 		depends-on="EmbeddedJms" init-method="init" destroy-method="destroy">
 		<property name="connectionFactory" ref="ConnectionFactory"></property>
 		<property name="maxConnection" value="${send.parellel.size}"></property>
 	</bean>
 
-
 	<bean id="jmsNotifyConnectionPool" class="com.travelsky.pcc.reacc.tpc.jms.JmsConnectionPool"
 		depends-on="EmbeddedJms" init-method="init" destroy-method="destroy">
 		<property name="connectionFactory" ref="ConnectionFactory"></property>
 		<property name="maxConnection" value="${reply.parallel.size}"></property>
 	</bean>
-
-
-	<bean id="senderAndReplyService" class="com.travelsky.pcc.reacc.tpc.jms.JMSService"
+	
+	<bean id="jmsGroupConnectionPool" class="com.travelsky.pcc.reacc.tpc.jms.JmsConnectionPool"
+		depends-on="EmbeddedJms" init-method="init" destroy-method="destroy">
+		<property name="connectionFactory" ref="ConnectionFactory"></property>
+		<property name="maxConnection" value="${send.group.size}"></property>
+	</bean>
+<bean id="senderAndReplyService" class="com.travelsky.pcc.reacc.tpc.jms.JMSService"
 		depends-on="EmbeddedJms">
 		<property name="queue" ref="/queue/travelskyQueue" />
 		<property name="replyQueue" ref="/queue/travelskyReplyQueue" />
@@ -96,6 +99,14 @@
 		depends-on="EmbeddedJms">
 		<property name="queue" ref="/queue/travelskyReplyQueue" />
 		<property name="jmsConnectionPool" ref="jmsNotifyConnectionPool" />
+	</bean>
+
+	<bean id="jmsGroupService" class="com.travelsky.pcc.reacc.tpc.jms.JMSService"
+		depends-on="EmbeddedJms">
+		<property name="queue" ref="/queue/travelskyGroupQueue" />
+		<property name="replyQueue" ref="/queue/travelskyGroupQueue" />
+		<property name="jmsConnectionPool" ref="jmsGroupConnectionPool" />
+		<property name="replyJmsConnectionPool" ref="jmsGroupConnectionPool" />
 	</bean>
 
 
@@ -117,9 +128,16 @@
 		<property name="taskContextManager" ref="taskContextManager" />
 	</bean>
 	
+	<bean id="taskGroupParallelClientInterface" class="com.travelsky.pcc.reacc.tpc.client.TaskGroupParallelClient">
+		<property name="jmsGroupService" ref="jmsGroupService" />
+		<property name="taskContextManager" ref="taskContextManager" />
+		<property name="singleWaitForReply" value="15000" />
+		<property name="taskParallelClientInterface" ref="taskParallelClientInterface" />
+	</bean>
+	
 	<bean id="travelskyParallelComputerTemplate"
 		class="com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate" abstract="true">
-		<property name="taskParallelClientInterface" ref="taskParallelClientInterface"></property>
+		<property name="taskGroupParallelClientInterface" ref="taskGroupParallelClientInterface"></property>
 	</bean>
 
 

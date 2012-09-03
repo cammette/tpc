@@ -31,6 +31,10 @@
 	<queue name="deadLetterQueue">
 		<entry name="/queue/deadLetterQueue" />
 	</queue>
+	
+	<queue name="travelskyGroupQueue">
+		<entry name="/queue/travelskyGroupQueue" />
+	</queue>
 
 
 </configuration>

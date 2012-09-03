@@ -86,11 +86,13 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 	protected abstract String getTaskBatchNo(P p);
 	
 	/**
-	 * 获取批次号绑定的对象
+	 * 获取绑定的属性，可以用来传递基本类型的值
 	 * @param p
 	 * @return
 	 */
-	protected abstract Map<String,String> getTaskBindMap(P p);
+	protected Map<String,String> getTaskBindMap(P p){
+		return new HashMap<String, String>();
+	}
 
 	/**
 	 * 定义任务单元的执行逻辑

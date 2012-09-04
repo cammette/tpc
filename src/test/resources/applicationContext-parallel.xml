@@ -131,13 +131,16 @@
 	<bean id="taskGroupParallelClientInterface" class="com.travelsky.pcc.reacc.tpc.client.TaskGroupParallelClient">
 		<property name="jmsGroupService" ref="jmsGroupService" />
 		<property name="taskContextManager" ref="taskContextManager" />
-		<property name="singleWaitForReply" value="15000" />
+		<property name="waitForReplyGroupTask" value="15000" />
+		<property name="waitForReplyGroupQueue" value="15000" />
 		<property name="taskParallelClientInterface" ref="taskParallelClientInterface" />
+		<property name="notifyService" ref="notifyService" />
 	</bean>
 	
 	<bean id="travelskyParallelComputerTemplate"
 		class="com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate" abstract="true">
-		<property name="taskGroupParallelClientInterface" ref="taskGroupParallelClientInterface"></property>
+		<property name="taskGroupParallelClientInterface" ref="taskGroupParallelClientInterface"/>
+		<property name="taskParallelClientInterface" ref="taskParallelClientInterface" />
 	</bean>
 
 

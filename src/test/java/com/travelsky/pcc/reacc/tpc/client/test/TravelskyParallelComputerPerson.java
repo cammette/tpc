@@ -13,19 +13,28 @@ import com.travelsky.pcc.reacc.tpc.client.TaskGroup;
 import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate;
 
 public class TravelskyParallelComputerPerson extends
-		TravelskyParallelComputerTemplate<Integer, Person, ReturnBean> {
+		TravelskyParallelComputerTemplate<TtestBean, Person, ReturnBean> {
 	protected Logger log = Logger.getLogger(getClass());
 	@Override
-	protected List<TaskGroup<Person>> split(Integer p) {
+	protected List<TaskGroup<Person>> split(TtestBean p) {
+		if(p.isNull()){
+			return null;
+		}
 		List<TaskGroup<Person>> taskGroups = new ArrayList<TaskGroup<Person>>();
+		if(p.isSingle()){
+			p.setSendListsize(1);
+		}
+		if(p.isSizeZero()){
+			return taskGroups;
+		}
 		TaskGroup<Person> taskGroup = new TaskGroup<Person>();
 		Person person = null;
-		for (int j = 0; j < 2; j++) {
+		for (int j = 0; j < p.getSendListsize(); j++) {
 			taskGroup = new TaskGroup<Person>();
-			for (int i = 0; i < p; i++) {
+			for (int i = 0; i < p.getSendSize(); i++) {
 				person = new Person();
-				person.setId(j+i + "");
-				person.setName("name中文测试" + i+j);
+				person.setId("j= "+j+" i= "+i + "");
+				person.setName("name中文测试" + i+":"+j);
 				taskGroup.add(person);
 			}
 			taskGroups.add(taskGroup);
@@ -34,7 +43,7 @@ public class TravelskyParallelComputerPerson extends
 	}
 
 	@Override
-	protected String getTaskBatchNo(Integer p) {
+	protected String getTaskBatchNo(TtestBean p) {
 		// TODO Auto-generated method stub
 		return p+"batchNofffffffffff";
 	}
@@ -57,7 +66,7 @@ public class TravelskyParallelComputerPerson extends
 	}
 
 	@Override
-	protected Map<String, String> getTaskBindMap(Integer p) {
+	protected Map<String, String> getTaskBindMap(TtestBean p) {
 		Map<String, String> map = new HashMap<String, String>(){{
 			put("aa","bb");
 			put("cc","dd");

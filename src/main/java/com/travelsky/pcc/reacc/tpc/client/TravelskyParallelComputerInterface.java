@@ -13,6 +13,7 @@ public interface TravelskyParallelComputerInterface<P> {
 	/**
 	 * 异步执行任务接口
 	 * @param p
+	 * @throws TaskExcutedReplyTimeoutException 
 	 */
 	public void excuteAsyn(P p);
 

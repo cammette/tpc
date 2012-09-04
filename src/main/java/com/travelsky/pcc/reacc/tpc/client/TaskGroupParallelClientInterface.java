@@ -16,6 +16,6 @@ public interface TaskGroupParallelClientInterface<T> {
 	public TaskResult excuteSync(List<TaskGroup<T>> taskGroups,String batchNo,long excuteTimeout,Map<String, String> messageProperties)
 			throws TaskExcutedReplyTimeoutException;
 	
-	public void excuteAsyn(List<TaskGroup<Object>> taskGroups,String batchNo,Map<String, String> messageProperties);
+	public void excuteAsyn(List<TaskGroup<T>> taskGroups,String batchNo,Map<String, String> messageProperties);
 }
 										

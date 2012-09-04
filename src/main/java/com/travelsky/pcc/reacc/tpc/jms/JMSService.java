@@ -105,8 +105,11 @@ public class JMSService {
 			}
 		}
 	}
-
 	public void send(Serializable msg, String batchNo,Map<String, String> messageProperties) {
+		this.send(msg, batchNo, messageProperties, null);
+	}
+
+	public void send(Serializable msg, String batchNo,Map<String, String> messageProperties,Integer priority) {
 		JmsConnectionSession jmsConnectionSession = null;
 		MessageProducer producer = null;
 		try {
@@ -122,6 +125,9 @@ public class JMSService {
 			}
 			if (batchNo != null && batchNo.length() > 0) {
 				message.setStringProperty(BATCH_NO, batchNo);
+			}
+			if(priority!=null && priority>0){
+				message.setJMSPriority(priority);
 			}
 			if(messageProperties!=null){
 				Set<String> keys = messageProperties.keySet();

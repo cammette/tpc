@@ -18,7 +18,7 @@ import com.travelsky.pcc.reacc.tpc.status.TaskContextManager;
  * @author bingo
  *
  */
-public class TaskParallelClient implements TaskParallelClientInterface {
+public class TaskParallelClient implements TaskParallelClientInterface<Object> {
 
 	private JMSService senderAndReplyService;
 	

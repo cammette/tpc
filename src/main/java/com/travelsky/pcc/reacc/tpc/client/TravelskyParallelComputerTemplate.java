@@ -21,19 +21,49 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 	public static final String ParallelComputerSpringBean = "P_C_S";
 	
 	private TaskGroupParallelClientInterface<T> taskGroupParallelClientInterface;
+	
+	private TaskParallelClientInterface<T> taskParallelClientInterface;
 
 	
 	@Override
 	public void excuteAsyn(P p) {
-		//this.taskGroupParallelClientInterface.excuteAsyn( this.split(p), getTaskBatchNo(p),
-			//	genProperties(p));
+		if(null==p){
+			return;
+		}
+		List<TaskGroup<T>>  taskGroups= this.split(p);
+		if(null==taskGroups||taskGroups.size()==0){
+			return;
+		}
+		if(isSingleGroup(taskGroups)){
+			 this.taskParallelClientInterface.excuteAsyn(taskGroups.get(0), getTaskBatchNo(p),
+					 genProperties(p));
+		}
+		this.taskGroupParallelClientInterface.excuteAsyn(taskGroups, getTaskBatchNo(p),
+				 genProperties(p));
 	}
 
 	@Override
 	public TaskResult excuteSyn(P p, long timeout)
 			throws TaskExcutedReplyTimeoutException {
-		return this.taskGroupParallelClientInterface.excuteSync(this.split(p), getTaskBatchNo(p),
+		if(null==p){
+			return null;
+		}
+		List<TaskGroup<T>>  taskGroups= this.split(p);
+		if(null==taskGroups||taskGroups.size()==0){
+			return null;
+		}
+		if(isSingleGroup(taskGroups)){
+			return this.taskParallelClientInterface.excuteSync(taskGroups.get(0), getTaskBatchNo(p),
+					timeout, genProperties(p));
+		}
+		return this.taskGroupParallelClientInterface.excuteSync(taskGroups, getTaskBatchNo(p),
 				timeout, genProperties(p));
+	}
+	private boolean isSingleGroup(List<TaskGroup<T>>  taskGroups){
+		if(taskGroups.size()==1){
+			return true;
+		}
+		return false;
 	}
 	private Map<String, String> genProperties(P p){
 		Map<String, String> messageProperties = new HashMap<String, String>();
@@ -106,6 +136,15 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 	public void setTaskGroupParallelClientInterface(
 			TaskGroupParallelClientInterface<T> taskGroupParallelClientInterface) {
 		this.taskGroupParallelClientInterface = taskGroupParallelClientInterface;
+	}
+
+	public TaskParallelClientInterface<T> getTaskParallelClientInterface() {
+		return taskParallelClientInterface;
+	}
+
+	public void setTaskParallelClientInterface(
+			TaskParallelClientInterface<T> taskParallelClientInterface) {
+		this.taskParallelClientInterface = taskParallelClientInterface;
 	}
 	
 }

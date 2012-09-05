@@ -20,6 +20,12 @@ public abstract class AbstractTaskListener implements MessageListener {
 	private Logger log = Logger.getLogger(getClass());
 
 	private TaskContextManager taskContextManager;
+	
+	private String retryExceptions;
+	
+	public String RETRY_TIMES_KEY = "__retry_t_k";
+	
+	private int retryTimes;
 
 	public TaskContextManager getTaskContextManager() {
 		return taskContextManager;
@@ -59,5 +65,24 @@ public abstract class AbstractTaskListener implements MessageListener {
 	 */
 	protected abstract TaskUnitResult doMessage(Message msg, String batchNo)
 			throws JMSException;
+
+	public String getRetryExceptions() {
+		return retryExceptions;
+	}
+
+	public void setRetryExceptions(String retryExceptions) {
+		this.retryExceptions = retryExceptions;
+	}
+
+	public int getRetryTimes() {
+		return retryTimes;
+	}
+
+	public void setRetryTimes(int retryTimes) {
+		this.retryTimes = retryTimes;
+	}
+	
+	
+	
 
 }

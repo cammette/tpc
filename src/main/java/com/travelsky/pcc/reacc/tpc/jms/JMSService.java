@@ -117,6 +117,7 @@ public class JMSService {
 					.getJmsConnectionSession();
 			Session session = jmsConnectionSession.getSession();
 			producer = session.createProducer(queue);
+			producer.setDisableMessageID(true);
 			Message message = null;
 			if (msg instanceof String) {
 				message = session.createTextMessage((String) msg);

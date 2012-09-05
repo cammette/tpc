@@ -38,8 +38,4 @@ public class TtestBean {
 	public void setSendSize(int sendSize) {
 		this.sendSize = sendSize;
 	}
-	
-	
-	
-
 }

@@ -38,6 +38,9 @@
 	<bean id="listener"
 		class="com.travelsky.pcc.reacc.tpc.client.listener.TravelskyParallelDoTaskistener"
 		parent="abstractTaskListener">
+		<property name="retryExceptions" value="${task.unit.retry.exceptions}"></property>
+		<property name="retryTimes" value="${task.unit.retry.times}"></property>
+		<property name="senderAndReplyService" ref="senderAndReplyService"></property>
 	</bean>
 
 	<bean id="notify"

@@ -43,6 +43,8 @@ public class PersonTest {
 	@Test
 	public void testTravelskyParallelComputerExcuteSync() throws TaskExcutedException, com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException{
 		TtestBean bean = new TtestBean();
+		bean.setSendSize(5);
+		bean.setSendListsize(3);
 		requestParallelSync( bean, "syn normal test ",true);
 		bean.setNull(true);
 		requestParallelSync(bean,"syn split return null",true);
@@ -60,7 +62,8 @@ public class PersonTest {
 		try {
 			log.info("-------------------"+title+" test start\n");
 			if(isSyn){
-				taskResult = travelskyParallelComputerInterface.excuteSyn(bean, 1000);
+				taskResult = travelskyParallelComputerInterface.excuteSyn(bean, 500000);
+				log.info("time spend:"+(taskResult.getEndTime().getTime()-taskResult.getStartTime().getTime())/1000);
 			}
 			else{
 				travelskyParallelComputerInterface.excuteAsyn(bean);

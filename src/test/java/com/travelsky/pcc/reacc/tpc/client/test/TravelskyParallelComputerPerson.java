@@ -52,7 +52,17 @@ public class TravelskyParallelComputerPerson extends
 	public ReturnBean doTaskUnit(Person t) {
 		ReturnBean returnBean = new ReturnBean();
 		returnBean.setId(t.getId());
+		if(t.getId().equals("j= 0 i= 3")){
+			int i = Integer.parseInt(t.getId());
+		}
 		returnBean.setResult(t.getName()+" doTaskUnit");
+		log.info(Thread.currentThread().getName()+":"+t.getId());
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return returnBean;
 	}
 

@@ -121,7 +121,7 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 	 * @param t
 	 * @return
 	 */
-	public abstract U doTaskUnit(T t);
+	public abstract U doTaskUnit(T t) throws Exception;
 
 	/**
 	 * 定义汇聚任务执行结果的通知逻辑

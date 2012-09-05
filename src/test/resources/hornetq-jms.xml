@@ -11,7 +11,7 @@
 		</entries>
 		<connection-ttl>-1</connection-ttl>
 		<block-on-durable-send>true</block-on-durable-send>
-		<consumer-window-size>1</consumer-window-size>
+		<consumer-window-size>100</consumer-window-size>
 		<producer-max-rate>-1</producer-max-rate>
 	</connection-factory>
 

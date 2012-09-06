@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
 import com.travelsky.pcc.reacc.tpc.jms.JMSService;
+import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 import com.travelsky.pcc.reacc.tpc.status.TaskContextManager;
 
 /**
@@ -88,8 +89,8 @@ public class TaskGroupParallelClient implements
 			groupCount++;
 		}
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(GROURP_SIZE_KEY, groupCount + "");
-		map.put(TASK_SIZE_KEY, totalCount + "");
+		map.put(StaticProperties.GROURP_SIZE_KEY, groupCount + "");
+		map.put(StaticProperties.TASK_SIZE_KEY, totalCount + "");
 		return map;
 	}
 /**
@@ -100,10 +101,10 @@ public class TaskGroupParallelClient implements
  */
 	private TaskResult initTaskResult(ObjectMessage msg) throws JMSException {
 		TaskResult taskResult = new TaskResult();
-		taskResult.setBatchNo(msg.getStringProperty(JMSService.BATCH_NO));
+		taskResult.setBatchNo(msg.getStringProperty(StaticProperties.BATCH_NO));
 		taskResult.setStartTime(new Date());
 		taskResult.setTotalCount(Integer.parseInt(msg
-				.getStringProperty(TASK_SIZE_KEY)));
+				.getStringProperty(StaticProperties.TASK_SIZE_KEY)));
 		return taskResult;
 
 	}
@@ -127,7 +128,7 @@ public class TaskGroupParallelClient implements
 				if (null == taskResult) {
 					taskResult = initTaskResult(msg);
 					groupNo = Integer.parseInt(msg
-							.getStringProperty(GROURP_SIZE_KEY));
+							.getStringProperty(StaticProperties.GROURP_SIZE_KEY));
 					String proName = "";
 					for (Enumeration e = msg.getPropertyNames(); e
 							.hasMoreElements();) {
@@ -135,13 +136,13 @@ public class TaskGroupParallelClient implements
 						messageProperties.put(proName,
 								msg.getStringProperty(proName));
 					}
-					messageProperties.remove(GROURP_SIZE_KEY);
-					messageProperties.remove(TASK_SIZE_KEY);
-					messageProperties.remove(JMSService.JMS_PROPERTIRES_NAME);
+					messageProperties.remove(StaticProperties.GROURP_SIZE_KEY);
+					messageProperties.remove(StaticProperties.TASK_SIZE_KEY);
+					messageProperties.remove(StaticProperties.JMS_PROPERTIRES_NAME);
 				}
 				log.info("batchNo:"+batchNo + groupNo);
 				taskBatchNo = batchNo + groupNo;
-				messageProperties.put(JMSService.BATCH_NO, taskBatchNo);
+				messageProperties.put(StaticProperties.BATCH_NO, taskBatchNo);
 				temp = (TaskResult) taskParallelClientInterface.excuteSync(
 						taskGroup, taskBatchNo, waitTimeout,
 						messageProperties);

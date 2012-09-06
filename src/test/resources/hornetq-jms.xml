@@ -36,6 +36,10 @@
 		<entry name="/queue/travelskyGroupQueue" />
 	</queue>
 	
+	
+	<queue name="travelskyGroupReplyQueue">
+		<entry name="/queue/travelskyGroupReplyQueue" />
+	</queue>
 	<queue name="test">
 		<entry name="/queue/test" />
 		<durable>false</durable>

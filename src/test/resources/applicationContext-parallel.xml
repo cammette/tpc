@@ -38,9 +38,6 @@
 	<bean id="listener"
 		class="com.travelsky.pcc.reacc.tpc.client.listener.TravelskyParallelDoTaskistener"
 		parent="abstractTaskListener">
-		<property name="retryExceptions" value="${task.unit.retry.exceptions}"></property>
-		<property name="retryTimes" value="${task.unit.retry.times}"></property>
-		<property name="senderAndReplyService" ref="senderAndReplyService"></property>
 	</bean>
 
 	<bean id="notify"
@@ -131,11 +128,11 @@
 		<property name="taskContextManager" ref="taskContextManager" />
 	</bean>
 	
-	<bean id="taskGroupParallelClientInterface" class="com.travelsky.pcc.reacc.tpc.client.TaskGroupParallelClient">
+	<bean id="taskGroupParallelClientInterface" class="com.travelsky.pcc.reacc.tpc.client.TaskGroupForkParallelClient">
 		<property name="jmsGroupService" ref="jmsGroupService" />
 		<property name="taskContextManager" ref="taskContextManager" />
-		<property name="waitForReplyGroupTask" value="15000" />
-		<property name="waitForReplyGroupQueue" value="15000" />
+		<property name="waitForReplyGroupTask" value="${waitForReply.group.task.default}" />
+		<property name="waitForReplyGroupQueue" value="${waitForReply.group.queue.default}" />
 		<property name="taskParallelClientInterface" ref="taskParallelClientInterface" />
 		<property name="notifyService" ref="notifyService" />
 	</bean>

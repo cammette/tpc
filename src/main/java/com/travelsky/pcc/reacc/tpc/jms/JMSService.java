@@ -35,6 +35,8 @@ public class JMSService {
 	
 	private JmsConnectionPool replyJmsConnectionPool; 
 	
+	public final static String JMS_PROPERTIRES_NAME="JMSXDeliveryCount";
+	
 	public JmsConnectionPool getReplyJmsConnectionPool() {
 		return replyJmsConnectionPool;
 	}

@@ -1,5 +1,6 @@
 package com.travelsky.pcc.reacc.tpc.client;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ import com.travelsky.pcc.reacc.tpc.status.TaskContextManager;
  * @author bingo
  * 
  */
-public class TaskGroupParallelClient implements
+public class TaskGroupForkParallelClient implements
 		TaskGroupParallelClientInterface<Object> {
 
 	private JMSService jmsGroupService;
@@ -32,7 +33,6 @@ public class TaskGroupParallelClient implements
 	private long waitForReplyGroupQueue = 3000;
 	private long waitForReplyGroupTask = 3000;
 	private JMSService notifyService;
-	private int startGroupIden = 9;
 
 	@Override
 	public TaskResult excuteSync(List<TaskGroup<Object>> taskGroups,
@@ -52,11 +52,7 @@ public class TaskGroupParallelClient implements
 	private void sendTaskGroups(List<TaskGroup<Object>> taskGroups,String batchNo,Map<String, String> messageProperties){
 		Map<String, String> map = genProperties(taskGroups, batchNo);
 		messageProperties.putAll(map);
-		int priority = startGroupIden;
-		for (TaskGroup<Object> taskGroup : taskGroups) {
-			jmsGroupService.send(taskGroup, batchNo+priority, messageProperties);
-			priority--;
-		}
+		jmsGroupService.send((Serializable) taskGroups, batchNo, messageProperties);
 	}
 
 	@Override
@@ -81,14 +77,11 @@ public class TaskGroupParallelClient implements
  */
 	private Map<String, String> genProperties(
 			List<TaskGroup<Object>> taskGroups, String batchNo) {
-		int groupCount = 0;
 		int totalCount = 0;
 		for (TaskGroup<Object> taskGroup : taskGroups) {
 			totalCount = totalCount + taskGroup.size();
-			groupCount++;
 		}
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(GROURP_SIZE_KEY, groupCount + "");
 		map.put(TASK_SIZE_KEY, totalCount + "");
 		return map;
 	}
@@ -111,36 +104,28 @@ public class TaskGroupParallelClient implements
 	private TaskResult execute(String batchNo, long waitTimeout) {
 		ObjectMessage msg = null;
 		TaskResult taskResult = null;
-		int groupNo = 0;
 		TaskResult temp = null;
 		Map<String, String> messageProperties = new HashMap<String, String>();
 		String taskBatchNo="";
-		int priority = startGroupIden;
-		while (taskResult == null || groupNo > 0) {
-			log.info("groupNo:"+groupNo);
-			try {
-				msg = (ObjectMessage) jmsGroupService.waitforReply(batchNo+priority,
-						waitForReplyGroupQueue);
-				TaskGroup<Object> taskGroup = null;
-				priority--;
-				taskGroup = (TaskGroup<Object>) msg.getObject();
-				if (null == taskResult) {
-					taskResult = initTaskResult(msg);
-					groupNo = Integer.parseInt(msg
-							.getStringProperty(GROURP_SIZE_KEY));
-					String proName = "";
-					for (Enumeration e = msg.getPropertyNames(); e
-							.hasMoreElements();) {
-						proName = (String) e.nextElement();
-						messageProperties.put(proName,
-								msg.getStringProperty(proName));
-					}
-					messageProperties.remove(GROURP_SIZE_KEY);
-					messageProperties.remove(TASK_SIZE_KEY);
-					messageProperties.remove(JMSService.JMS_PROPERTIRES_NAME);
-				}
-				log.info("batchNo:"+batchNo + groupNo);
-				taskBatchNo = batchNo + groupNo;
+		try {
+			msg = (ObjectMessage) jmsGroupService.waitforReply(batchNo,
+					waitForReplyGroupQueue);
+			List<TaskGroup<Object>> taskGroups = null;
+			taskGroups = (List<TaskGroup<Object>>) msg.getObject();
+			taskResult = initTaskResult(msg);
+			String proName = "";
+			for (Enumeration e = msg.getPropertyNames(); e
+					.hasMoreElements();) {
+				proName = (String) e.nextElement();
+				messageProperties.put(proName,
+						msg.getStringProperty(proName));
+			}
+			messageProperties.remove(TASK_SIZE_KEY);
+			messageProperties.remove(JMSService.JMS_PROPERTIRES_NAME);
+			TaskGroup<Object> taskGroup;
+			for(int i=0;i<taskGroups.size();i++){
+				taskGroup = taskGroups.get(i);
+				taskBatchNo = batchNo + i;
 				messageProperties.put(JMSService.BATCH_NO, taskBatchNo);
 				temp = (TaskResult) taskParallelClientInterface.excuteSync(
 						taskGroup, taskBatchNo, waitTimeout,
@@ -151,18 +136,15 @@ public class TaskGroupParallelClient implements
 						+ temp.getFailureCount());
 				taskResult.setSuccessfulcount(taskResult.getSuccessfulcount()
 						+ temp.getSuccessfulcount());
-			} catch (TaskExcutedReplyTimeoutException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (JMSException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			}
-			finally{
-				groupNo--;
-			}
+			taskResult.setEndTime(new Date());
+		} catch (TaskExcutedReplyTimeoutException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (JMSException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		taskResult.setEndTime(new Date());
 		return taskResult;
 	}
 

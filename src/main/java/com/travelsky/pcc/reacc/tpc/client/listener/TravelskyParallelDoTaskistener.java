@@ -34,8 +34,6 @@ public class TravelskyParallelDoTaskistener extends AbstractTaskListener impleme
 	
 	private ApplicationContext springContext;
 	
-	private JMSService senderAndReplyService;
-	
 	private final static String doJoinTaskMethodName = "doTaskUnit";
 	
 	@Override
@@ -51,7 +49,7 @@ public class TravelskyParallelDoTaskistener extends AbstractTaskListener impleme
 			 if(proName.equals(TravelskyParallelComputerTemplate.ParallelComputerSpringBean)){
 				 springBeanName = msg.getStringProperty(proName);
 			 }
-			 else if(!proName.equals(JMSService.BATCH_NO)&&!proName.equals("JMSXDeliveryCount")&&!proName.equals(RETRY_TIMES_KEY)){
+			 else if(!proName.equals(JMSService.BATCH_NO)&&!proName.equals(JMSService.JMS_PROPERTIRES_NAME)){
 				 taskBindMap.put(proName, msg.getStringProperty(proName));
 			 }
 		}
@@ -73,38 +71,8 @@ public class TravelskyParallelDoTaskistener extends AbstractTaskListener impleme
 			taskUnitResult.setTaskResult((Serializable)returnObject);
 		} catch (Throwable e) {
 			log.error("excuted the task unsuccessfully",e);
-			log.info("message:"+e.getMessage());
-			log.info("message:"+e.getCause().getClass().getName());
-			Map<String, String> messageProperties = taskBindMap;
-			String exceptionClassName = e.getCause().getClass().getName();
-			exceptionClassName = exceptionClassName.substring(exceptionClassName.lastIndexOf(".")+1);
-			if(this.getRetryExceptions().indexOf(exceptionClassName)!=-1){
-				String retry= msg.getStringProperty(RETRY_TIMES_KEY);
-				int retryTimesTmp=0;
-				if(null==retry){
-					retryTimesTmp = this.getRetryTimes();
-				}
-				else{
-					retryTimesTmp = Integer.parseInt(retry);
-				}
-				if(retryTimesTmp == 0){
-					taskUnitResult.setMsg(" retry "+ this.getRetryTimes() +",but also have exception: " +e.getCause().getClass().getName());
-					taskUnitResult.setIsSuccess(false);
-				}
-				else{
-					messageProperties.put(JMSService.BATCH_NO, batchNo);
-					messageProperties.put(TravelskyParallelComputerTemplate.ParallelComputerSpringBean, springBeanName);
-					retryTimesTmp--;
-					messageProperties.put(RETRY_TIMES_KEY, retryTimesTmp+"");
-					senderAndReplyService.send((Serializable) paramObject, batchNo,taskBindMap);
-					taskUnitResult = null;
-				}
-			}
-			else{
-				taskUnitResult.setMsg(e.toString());
-				taskUnitResult.setIsSuccess(false);
-			}
-			
+			taskUnitResult.setMsg(e.toString());
+			taskUnitResult.setIsSuccess(false);
 		} 
 		return taskUnitResult;
 	}
@@ -114,14 +82,5 @@ public class TravelskyParallelDoTaskistener extends AbstractTaskListener impleme
 			throws BeansException {
 		springContext = appConext;
 	}
-
-	public JMSService getSenderAndReplyService() {
-		return senderAndReplyService;
-	}
-
-	public void setSenderAndReplyService(JMSService senderAndReplyService) {
-		this.senderAndReplyService = senderAndReplyService;
-	}
-	
 
 }

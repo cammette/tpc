@@ -1,6 +1,7 @@
 package com.travelsky.pcc.reacc.tpc.client.test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,16 +46,17 @@ public class TravelskyParallelComputerPerson extends
 	@Override
 	protected String getTaskBatchNo(TtestBean p) {
 		// TODO Auto-generated method stub
-		return p+"batchNofffffffffff";
+		return "batchNo:"+new Date().getTime();
 	}
 
 	@Override
 	public ReturnBean doTaskUnit(Person t) {
 		ReturnBean returnBean = new ReturnBean();
 		returnBean.setId(t.getId());
-		if(t.getId().equals("j= 0 i= 3")){
-			int i = Integer.parseInt(t.getId());
-		}
+//		if(t.getId().equals("j= 0 i= 3")){
+//			//异常测试
+//			Integer.parseInt(t.getId());
+//		}
 		returnBean.setResult(t.getName()+" doTaskUnit");
 		log.info(Thread.currentThread().getName()+":"+t.getId());
 		try {

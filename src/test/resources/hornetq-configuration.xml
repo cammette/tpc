@@ -23,7 +23,8 @@
 
 	<!-- Connectors -->
 	<security-enabled>false</security-enabled>
-	<persistence-enabled>false</persistence-enabled>
+	<persistence-enabled>true</persistence-enabled>
+	<id-cache-size>5000</id-cache-size>
 	<connectors>
 		<connector name="in-vm">
 			<factory-class>org.hornetq.core.remoting.impl.invm.InVMConnectorFactory

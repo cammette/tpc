@@ -35,6 +35,10 @@
 	<queue name="travelskyGroupQueue">
 		<entry name="/queue/travelskyGroupQueue" />
 	</queue>
+	
+	<queue name="test">
+		<entry name="/queue/test" />
+	</queue>
 
 
 </configuration>

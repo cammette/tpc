@@ -38,6 +38,7 @@
 	
 	<queue name="test">
 		<entry name="/queue/test" />
+		<durable>false</durable>
 	</queue>
 
 

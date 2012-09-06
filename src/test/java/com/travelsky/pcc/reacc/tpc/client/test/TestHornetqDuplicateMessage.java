@@ -45,7 +45,7 @@ public class TestHornetqDuplicateMessage {
        long a = System.currentTimeMillis();
        for (int i = 0; i < 2; i++) {
     	   TextMessage message = jmsConnection.getSession().createTextMessage("test");
-           message.setStringProperty("_HQ_DUPL_ID", "test"+i);
+           message.setStringProperty("_HQ_DUPL_ID", "test3"+i);
     	   producer.send(message);
 	   }
        DuplicateIDCache duplicateIDCache = embeddedJMS.getHornetQServer().getPostOffice().getDuplicateIDCache(new SimpleString("jms.queue.test"));

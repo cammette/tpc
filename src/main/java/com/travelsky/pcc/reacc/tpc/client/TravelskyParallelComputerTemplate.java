@@ -1,12 +1,12 @@
 package com.travelsky.pcc.reacc.tpc.client;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
+import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 
 /**
  * 定义了并行执行任务的模板方案，用户可以根据需求定义任务分解，任务执行以及任务结果汇聚
@@ -18,8 +18,6 @@ import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
 public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 		TravelskyParallelComputerInterface<P> {
 
-	public static final String ParallelComputerSpringBean = "P_C_S";
-	
 	private TaskGroupParallelClientInterface<T> taskGroupParallelClientInterface;
 	
 	private TaskParallelClientInterface<T> taskParallelClientInterface;
@@ -35,11 +33,13 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 			return;
 		}
 		if(isSingleGroup(taskGroups)){
-			 this.taskParallelClientInterface.excuteAsyn(taskGroups.get(0), getTaskBatchNo(p),
+			 this.taskParallelClientInterface.executeAsyn(taskGroups.get(0), getTaskBatchNo(p),
 					 genProperties(p));
 		}
-		this.taskGroupParallelClientInterface.excuteAsyn(taskGroups, getTaskBatchNo(p),
-				 genProperties(p));
+		else{
+			this.taskGroupParallelClientInterface.executeAsyn(taskGroups, getTaskBatchNo(p),
+					 genProperties(p));
+		}
 	}
 
 	@Override
@@ -53,10 +53,10 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 			return null;
 		}
 		if(isSingleGroup(taskGroups)){
-			return this.taskParallelClientInterface.excuteSync(taskGroups.get(0), getTaskBatchNo(p),
+			return this.taskParallelClientInterface.executeSync(taskGroups.get(0), getTaskBatchNo(p),
 					timeout, genProperties(p));
 		}
-		return this.taskGroupParallelClientInterface.excuteSync(taskGroups, getTaskBatchNo(p),
+		return this.taskGroupParallelClientInterface.executeSync(taskGroups, getTaskBatchNo(p),
 				timeout, genProperties(p));
 	}
 	private boolean isSingleGroup(List<TaskGroup<T>>  taskGroups){
@@ -67,7 +67,7 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 	}
 	private Map<String, String> genProperties(P p){
 		Map<String, String> messageProperties = new HashMap<String, String>();
-		messageProperties.put(ParallelComputerSpringBean,
+		messageProperties.put(StaticProperties.ParallelComputerSpringBean,
 				this.getParallelComputerSpringBeanName());
 		messageProperties.putAll(getTaskBindMap(p));
 		return messageProperties;

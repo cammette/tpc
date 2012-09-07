@@ -160,7 +160,7 @@ public class TaskResult implements Serializable {
 	public String toString() {
 		return "TaskResult [batchNo=" + batchNo
 				+ ", totalCount=" + totalCount + ", successfulcount="
-				+ successfulcount + ", failureCount=" + failureCount
+				+ successfulcount +",spendTime(ms)="+(endTime.getTime()-startTime.getTime())+ ", failureCount=" + failureCount
 				+ ", startTime=" + startTime + ", endTime=" + endTime
 				+ ", taskUnitResults=" + taskUnitResults + "]";
 	}

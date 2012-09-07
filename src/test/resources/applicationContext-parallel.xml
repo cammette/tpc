@@ -49,7 +49,6 @@
 		<property name="notifyService" ref="notifyService" />
 		<property name="replyGroupService" ref="replyGroupService" />
 		<property name="taskParallelClientInterface" ref="taskParallelClientInterface" />
-		
 	</bean>
 	
 	<bean id="listenerGroupContainer"
@@ -58,8 +57,8 @@
 		<property name="destination" ref="/queue/travelskyGroupQueue" />
 		<property name="messageListener" ref="group" />
 		<property name="sessionTransacted" value="false"></property>
-		<property name="concurrentConsumers" value="20" />
-		<property name="maxConcurrentConsumers" value="20" />
+		<property name="concurrentConsumers" value="${excuteTaskGroup.threadPool.concurrent.size}" />
+		<property name="maxConcurrentConsumers" value="${excuteTaskGroup.threadPool.max.size}" />
 	</bean>
 
 	<bean id="listenerContainer"
@@ -158,10 +157,8 @@
 		<property name="taskContextManager" ref="taskContextManager" />
 	</bean>
 	
-	<bean id="taskGroupParallelClientInterface" class="com.travelsky.pcc.reacc.tpc.client.TaskGroupForkParallelClient">
+	<bean id="taskGroupParallelClientInterface" class="com.travelsky.pcc.reacc.tpc.client.TaskGroupParallelClient">
 		<property name="sendAndReplyGroupService" ref="sendAndReplyGroupService" />
-		<property name="waitForReplyGroupTask" value="${waitForReply.group.task.default}" />
-		<property name="waitForReplyGroupQueue" value="${waitForReply.group.queue.default}" />
 	</bean>
 	
 	<bean id="travelskyParallelComputerTemplate"

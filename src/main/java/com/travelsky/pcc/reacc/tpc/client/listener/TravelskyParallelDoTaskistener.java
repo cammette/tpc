@@ -47,7 +47,7 @@ public class TravelskyParallelDoTaskistener extends AbstractTaskListener impleme
 		String proName="";
 		for (Enumeration<String> e = msg.getPropertyNames(); e.hasMoreElements();){
 			 proName=e.nextElement();
-			 if(proName.equals(TravelskyParallelComputerTemplate.ParallelComputerSpringBean)){
+			 if(proName.equals(StaticProperties.ParallelComputerSpringBean)){
 				 springBeanName = msg.getStringProperty(proName);
 			 }
 			 else if(!proName.equals(StaticProperties.BATCH_NO)&&!proName.equals(StaticProperties.JMS_PROPERTIRES_NAME)){

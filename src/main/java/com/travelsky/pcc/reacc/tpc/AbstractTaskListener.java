@@ -38,7 +38,7 @@ public abstract class AbstractTaskListener implements MessageListener {
 						"the message must include the batch_no property");
 			}
 			TaskUnitResult taskUnitResult = this.doMessage(msg, batchNo);
-			String springBeanName = msg.getStringProperty(TravelskyParallelComputerTemplate.ParallelComputerSpringBean);
+			String springBeanName = msg.getStringProperty(StaticProperties.ParallelComputerSpringBean);
 			taskContextManager.addTaskUnitResult(taskUnitResult,springBeanName);
 		} catch (Throwable e) {
 			log.error("task do message error : ", e);

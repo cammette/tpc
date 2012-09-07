@@ -21,47 +21,48 @@ import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
 import com.travelsky.pcc.reacc.tpc.jms.JMSService;
 import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 
-public class TaskGroupListener implements MessageListener  {
-	
+public class TaskGroupListener implements MessageListener {
+
 	private long waitForReplyGroupTask = 3000;
 	private Logger log = Logger.getLogger(getClass());
 	private TaskParallelClientInterface<Object> taskParallelClientInterface;
 	private JMSService notifyService;
 	private JMSService replyGroupService;
+
 	@Override
 	public void onMessage(Message message) {
-		ObjectMessage msg = (ObjectMessage)message;
+		ObjectMessage msg = (ObjectMessage) message;
 		Map<String, String> messageProperties = new HashMap<String, String>();
 		List<TaskGroup<Object>> taskGroups = null;
 		try {
 			String proName = "";
-			for (Enumeration e = msg.getPropertyNames(); e
-					.hasMoreElements();) {
+			for (Enumeration e = msg.getPropertyNames(); e.hasMoreElements();) {
 				proName = (String) e.nextElement();
-				messageProperties.put(proName,
-						msg.getStringProperty(proName));
+				messageProperties.put(proName, msg.getStringProperty(proName));
 			}
 			String batchNo = msg.getStringProperty(StaticProperties.BATCH_NO);
-			String timeOutStr = msg.getStringProperty(StaticProperties.MSG_TIME_OUT_KEY);
-			long timeOut = waitForReplyGroupTask;
-			boolean syn = false;
-			if(null != timeOutStr){
-				timeOut = Long.parseLong(timeOutStr);
-				syn = true;
+			String synOrAsyn = msg.getStringProperty(StaticProperties.MS_SYN_OR_ASYN_KEY);
+			if (null == synOrAsyn) {
+				synOrAsyn = StaticProperties.MS_VALUE_ASYN;
 			}
 			taskGroups = (List<TaskGroup<Object>>) msg.getObject();
-			TaskResult taskResult = initTaskResult(batchNo);
-			messageProperties.remove(StaticProperties.TASK_SIZE_KEY);
+			
+			TaskResult taskResult = new TaskResult();
+			taskResult.setBatchNo(batchNo);
+			taskResult.setStartTime(new Date());
+			
+			messageProperties.remove(StaticProperties.MS_SYN_OR_ASYN_KEY);
 			messageProperties.remove(StaticProperties.JMS_PROPERTIRES_NAME);
 			String taskBatchNo = "";
 			int groupNo = 1;
-			TaskResult temp=null;
-			taskResult.setBeanName(messageProperties.get(TravelskyParallelComputerTemplate.ParallelComputerSpringBean));
-			for(TaskGroup<Object> taskGroup : taskGroups){
+			TaskResult temp = null;
+			taskResult.setBeanName(messageProperties
+					.get(StaticProperties.ParallelComputerSpringBean));
+			for (TaskGroup<Object> taskGroup : taskGroups) {
 				taskBatchNo = batchNo + groupNo;
 				messageProperties.put(StaticProperties.BATCH_NO, taskBatchNo);
-				temp = (TaskResult) taskParallelClientInterface.excuteSync(
-						taskGroup, taskBatchNo, timeOut,
+				temp = (TaskResult) taskParallelClientInterface.executeSync(
+						taskGroup, taskBatchNo, waitForReplyGroupTask,
 						messageProperties);
 				taskResult.getTaskUnitResults().addAll(
 						temp.getTaskUnitResults());
@@ -69,14 +70,19 @@ public class TaskGroupListener implements MessageListener  {
 						+ temp.getFailureCount());
 				taskResult.setSuccessfulcount(taskResult.getSuccessfulcount()
 						+ temp.getSuccessfulcount());
+				taskResult.setTotalCount(taskResult.getTotalCount()+ temp.getTotalCount());
 			}
 			taskResult.setEndTime(new Date());
-			if(!syn){
+			if (synOrAsyn.equals(StaticProperties.MS_VALUE_SYN)) {
+				log.info("syn----end");
+				replyGroupService.send(taskResult, taskResult.getBatchNo(),
+						null);
+			}
+			else {
+				log.info("asyn----end");
 				notifyService.send(taskResult, null, null);
 			}
-			else{
-				replyGroupService.send(taskResult, taskResult.getBatchNo(),null);
-			}
+
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -85,13 +91,7 @@ public class TaskGroupListener implements MessageListener  {
 			e.printStackTrace();
 		}
 	}
-	
-	private TaskResult initTaskResult(String batchNo) throws JMSException {
-		TaskResult taskResult = new TaskResult();
-		taskResult.setBatchNo(batchNo);
-		taskResult.setStartTime(new Date());
-		return taskResult;
-	}
+
 
 	public long getWaitForReplyGroupTask() {
 		return waitForReplyGroupTask;
@@ -125,6 +125,5 @@ public class TaskGroupListener implements MessageListener  {
 	public void setReplyGroupService(JMSService replyGroupService) {
 		this.replyGroupService = replyGroupService;
 	}
-	
 
 }

@@ -57,11 +57,8 @@ public class JMSService {
 	public void setReplyQueue(Queue replyQueue) {
 		this.replyQueue = replyQueue;
 	}
-	public Message waitforReply(String batchNo, long timeout) throws TaskExcutedReplyTimeoutException {
-		return this.waitforReply(batchNo, timeout, null);
-	}
 
-	public Message waitforReply(String batchNo, long timeout,JMSCallBack jMSCallBack) throws TaskExcutedReplyTimeoutException {
+	public Message waitforReply(String batchNo, long timeout) throws TaskExcutedReplyTimeoutException {
 		JmsConnectionSession jmsConnectionSession = null;
 		MessageConsumer consumer = null;
 		try {
@@ -80,9 +77,6 @@ public class JMSService {
 			if (replyMessage == null) {
 				throw new TaskExcutedReplyTimeoutException(
 						"waiting for the reply message timeout");
-			}
-			if(jMSCallBack!=null){
-				jMSCallBack.callBack(replyMessage);
 			}
 			return replyMessage;
 		} catch (TaskExcutedReplyTimeoutException e) {

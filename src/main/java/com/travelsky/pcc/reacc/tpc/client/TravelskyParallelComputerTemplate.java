@@ -20,9 +20,6 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 
 	private TaskGroupParallelClientInterface<T> taskGroupParallelClientInterface;
 	
-	private TaskParallelClientInterface<T> taskParallelClientInterface;
-
-	
 	@Override
 	public void excuteAsyn(P p) {
 		if(null==p){
@@ -32,14 +29,8 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 		if(null==taskGroups||taskGroups.size()==0){
 			return;
 		}
-		if(isSingleGroup(taskGroups)){
-			 this.taskParallelClientInterface.executeAsyn(taskGroups.get(0), getTaskBatchNo(p),
+		this.taskGroupParallelClientInterface.executeAsyn(taskGroups, getTaskBatchNo(p),
 					 genProperties(p));
-		}
-		else{
-			this.taskGroupParallelClientInterface.executeAsyn(taskGroups, getTaskBatchNo(p),
-					 genProperties(p));
-		}
 	}
 
 	@Override
@@ -52,19 +43,10 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 		if(null==taskGroups||taskGroups.size()==0){
 			return null;
 		}
-		if(isSingleGroup(taskGroups)){
-			return this.taskParallelClientInterface.executeSync(taskGroups.get(0), getTaskBatchNo(p),
-					timeout, genProperties(p));
-		}
 		return this.taskGroupParallelClientInterface.executeSync(taskGroups, getTaskBatchNo(p),
 				timeout, genProperties(p));
 	}
-	private boolean isSingleGroup(List<TaskGroup<T>>  taskGroups){
-		if(taskGroups.size()==1){
-			return true;
-		}
-		return false;
-	}
+	
 	private Map<String, String> genProperties(P p){
 		Map<String, String> messageProperties = new HashMap<String, String>();
 		messageProperties.put(StaticProperties.ParallelComputerSpringBean,
@@ -73,14 +55,6 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 		return messageProperties;
 	}
 
-//	private List<Object> mergerTask(P p) {
-//		List<TaskGroup<T>> taskGroups = this.split(p);
-//		List<Object> taskList = new ArrayList<Object>();
-//		for (TaskGroup<T> taskGroup : taskGroups) {
-//			taskList.addAll(taskGroup);
-//		}
-//		return taskList;
-//	}
 	/**
 	 * 获取任务执行的springBeanName，默认是用户实现了该模板类的类名（第一个字母小写）
 	 * @return
@@ -136,15 +110,6 @@ public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
 	public void setTaskGroupParallelClientInterface(
 			TaskGroupParallelClientInterface<T> taskGroupParallelClientInterface) {
 		this.taskGroupParallelClientInterface = taskGroupParallelClientInterface;
-	}
-
-	public TaskParallelClientInterface<T> getTaskParallelClientInterface() {
-		return taskParallelClientInterface;
-	}
-
-	public void setTaskParallelClientInterface(
-			TaskParallelClientInterface<T> taskParallelClientInterface) {
-		this.taskParallelClientInterface = taskParallelClientInterface;
 	}
 	
 }

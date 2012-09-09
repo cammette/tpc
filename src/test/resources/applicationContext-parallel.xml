@@ -164,7 +164,6 @@
 	<bean id="travelskyParallelComputerTemplate"
 		class="com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate" abstract="true">
 		<property name="taskGroupParallelClientInterface" ref="taskGroupParallelClientInterface"/>
-		<property name="taskParallelClientInterface" ref="taskParallelClientInterface" />
 	</bean>
 
 

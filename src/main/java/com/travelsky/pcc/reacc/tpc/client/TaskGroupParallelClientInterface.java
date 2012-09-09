@@ -13,14 +13,9 @@ import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
  */
 public interface TaskGroupParallelClientInterface<T> {
 	
-	public String GROURP_SIZE_KEY = "__g_s_K";
-	
-	public String TASK_SIZE_KEY = "__t_s_k";
-	
-	
-	public TaskResult excuteSync(List<TaskGroup<T>> taskGroups,String batchNo,long excuteTimeout,Map<String, String> messageProperties)
+	public TaskResult executeSync(List<TaskGroup<T>> taskGroups,String batchNo,long excuteTimeout,Map<String, String> messageProperties)
 			throws TaskExcutedReplyTimeoutException;
 	
-	public void excuteAsyn(List<TaskGroup<T>> taskGroups,String batchNo,Map<String, String> messageProperties);
+	public void executeAsyn(List<TaskGroup<T>> taskGroups,String batchNo,Map<String, String> messageProperties);
 }
 										

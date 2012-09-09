@@ -70,11 +70,7 @@ public class TravelskyParallelComputerPerson extends
 
 	@Override
 	public void join(TaskResult taskResult) {
-		log.info("results size:"+taskResult.getTaskUnitResults().size());
-		List<TaskUnitResult>  taskUnitResults = taskResult.getTaskUnitResults();
-		for (TaskUnitResult taskUnitResult : taskUnitResults) {
-			ReturnBean returnBean = (ReturnBean)taskUnitResult.getTaskResult();
-		}
+		log.info("join "+taskResult.toString());
 	}
 
 	@Override

@@ -18,11 +18,11 @@ public interface TaskParallelClientInterface<T> {
 	 * @param excuteTimeout
 	 * @return
 	 */
-	public TaskResult excuteSync(List<T> tasks,String batchNo,long excuteTimeout,Map<String, String> messageProperties)  throws TaskExcutedReplyTimeoutException ;
+	public TaskResult executeSync(List<T> tasks,String batchNo,long excuteTimeout,Map<String, String> messageProperties)  throws TaskExcutedReplyTimeoutException ;
 	
 	/**
 	 * 异步执行任务，不等待任务执行结果
 	 * @param tasks
 	 */
-	public void excuteAsyn(List<T> tasks,String batchNo,Map<String, String> messageProperties);
+	public void executeAsyn(List<T> tasks,String batchNo,Map<String, String> messageProperties);
 }

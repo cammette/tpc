@@ -84,6 +84,7 @@ public class PersonTest {
 			}
 			List<TaskUnitResult> taskUnitResults = taskResult
 					.getTaskUnitResults();
+			log.info(taskResult.toString());
 			log.info("-------------------" + title + " test code end\n");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

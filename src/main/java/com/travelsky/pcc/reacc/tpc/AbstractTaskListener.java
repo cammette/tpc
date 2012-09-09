@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate;
-import com.travelsky.pcc.reacc.tpc.jms.JMSService;
+import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 import com.travelsky.pcc.reacc.tpc.status.TaskContextManager;
 /**
  * 监听队列，获取任务单元并执行任务处理逻辑，同时记录任务执行结果
@@ -32,13 +32,13 @@ public abstract class AbstractTaskListener implements MessageListener {
 	@Override
 	public void onMessage(Message msg) {
 		try {
-			String batchNo = msg.getStringProperty(JMSService.BATCH_NO);
+			String batchNo = msg.getStringProperty(StaticProperties.BATCH_NO);
 			if (batchNo == null || batchNo.length() <= 0) {
 				throw new IllegalArgumentException(
 						"the message must include the batch_no property");
 			}
 			TaskUnitResult taskUnitResult = this.doMessage(msg, batchNo);
-			String springBeanName = msg.getStringProperty(TravelskyParallelComputerTemplate.ParallelComputerSpringBean);
+			String springBeanName = msg.getStringProperty(StaticProperties.ParallelComputerSpringBean);
 			taskContextManager.addTaskUnitResult(taskUnitResult,springBeanName);
 		} catch (Throwable e) {
 			log.error("task do message error : ", e);

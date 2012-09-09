@@ -13,8 +13,9 @@ import javax.jms.Session;
 import org.apache.log4j.Logger;
 
 import com.travelsky.pcc.reacc.tpc.exception.AddTaskToQueueException;
-import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyException;
+import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
+import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 
 /**
  * 向队列发送或接受消息
@@ -25,8 +26,6 @@ import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyException;
 public class JMSService {
 	private Logger log = Logger.getLogger(getClass());
 
-	public static final String BATCH_NO = "batch_no";
-
 	private Queue queue;
 
 	private Queue replyQueue;
@@ -34,8 +33,6 @@ public class JMSService {
 	private JmsConnectionPool jmsConnectionPool;
 	
 	private JmsConnectionPool replyJmsConnectionPool; 
-	
-	public final static String JMS_PROPERTIRES_NAME="JMSXDeliveryCount";
 	
 	public JmsConnectionPool getReplyJmsConnectionPool() {
 		return replyJmsConnectionPool;
@@ -73,7 +70,7 @@ public class JMSService {
 			Session session = jmsConnectionSession.getSession();
 			jmsConnectionSession.getConnection().start();
 			StringBuilder batchSelector = new StringBuilder();
-			batchSelector.append(BATCH_NO);
+			batchSelector.append(StaticProperties.BATCH_NO);
 			batchSelector.append("='");
 			batchSelector.append(batchNo);
 			batchSelector.append("'");
@@ -133,7 +130,7 @@ public class JMSService {
 				message = session.createObjectMessage(msg);
 			}
 			if (batchNo != null && batchNo.length() > 0) {
-				message.setStringProperty(BATCH_NO, batchNo);
+				message.setStringProperty(StaticProperties.BATCH_NO, batchNo);
 			}
 			if(priority!=null && priority>0){
 				message.setJMSPriority(priority);

@@ -21,6 +21,7 @@ import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedException;
 import com.travelsky.pcc.reacc.tpc.jms.JMSService;
+import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 
 /**
  * 实现了任务单元执行的逻辑：
@@ -46,10 +47,10 @@ public class TravelskyParallelDoTaskistener extends AbstractTaskListener impleme
 		String proName="";
 		for (Enumeration<String> e = msg.getPropertyNames(); e.hasMoreElements();){
 			 proName=e.nextElement();
-			 if(proName.equals(TravelskyParallelComputerTemplate.ParallelComputerSpringBean)){
+			 if(proName.equals(StaticProperties.ParallelComputerSpringBean)){
 				 springBeanName = msg.getStringProperty(proName);
 			 }
-			 else if(!proName.equals(JMSService.BATCH_NO)&&!proName.equals(JMSService.JMS_PROPERTIRES_NAME)){
+			 else if(!proName.equals(StaticProperties.BATCH_NO)&&!proName.equals(StaticProperties.JMS_PROPERTIRES_NAME)){
 				 taskBindMap.put(proName, msg.getStringProperty(proName));
 			 }
 		}

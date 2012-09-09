@@ -26,7 +26,7 @@ public class TaskGroupListener implements MessageListener {
 	private long waitForReplyGroupTask = 3000;
 	private Logger log = Logger.getLogger(getClass());
 	private TaskParallelClientInterface<Object> taskParallelClientInterface;
-	private JMSService notifyService;
+	private JMSService notifyClientService;
 	private JMSService replyGroupService;
 
 	@Override
@@ -80,7 +80,7 @@ public class TaskGroupListener implements MessageListener {
 			}
 			else {
 				log.info("asyn----end");
-				notifyService.send(taskResult, null, null);
+				notifyClientService.send(taskResult, null, null);
 			}
 
 		} catch (JMSException e) {
@@ -110,12 +110,12 @@ public class TaskGroupListener implements MessageListener {
 		this.taskParallelClientInterface = taskParallelClientInterface;
 	}
 
-	public JMSService getNotifyService() {
-		return notifyService;
+	public JMSService getNotifyClientService() {
+		return notifyClientService;
 	}
 
-	public void setNotifyService(JMSService notifyService) {
-		this.notifyService = notifyService;
+	public void setNotifyClientService(JMSService notifyClientService) {
+		this.notifyClientService = notifyClientService;
 	}
 
 	public JMSService getReplyGroupService() {

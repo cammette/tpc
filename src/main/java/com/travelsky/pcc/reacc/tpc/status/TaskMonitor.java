@@ -21,9 +21,9 @@ public class TaskMonitor {
 	
 	private TaskContextManager taskContextManager;
 	
-	private JMSService notifyService;
+	private JMSService notifyClientService;
 	
-	private JMSService replyService;
+	private JMSService replyClientService;
 	
 	private long interval = 10;
 	
@@ -35,22 +35,6 @@ public class TaskMonitor {
 		this.interval = interval;
 	}
 	
-	public JMSService getNotifyService() {
-		return notifyService;
-	}
-
-	public void setNotifyService(JMSService notifyService) {
-		this.notifyService = notifyService;
-	}
-
-	public JMSService getReplyService() {
-		return replyService;
-	}
-
-	public void setReplyService(JMSService replyService) {
-		this.replyService = replyService;
-	}
-
 	public TaskContextManager getTaskContextManager() {
 		return taskContextManager;
 	}
@@ -81,9 +65,9 @@ public class TaskMonitor {
 						for (TaskResult taskResult : taskResults) {
 							taskResult.setEndTime(new Date());
 							if(taskResult.isAsyn()){
-								notifyService.send(taskResult, null,null);
+								notifyClientService.send(taskResult, null,null);
 							}else{
-								replyService.send(taskResult, taskResult.getBatchNo(),null);
+								replyClientService.send(taskResult, taskResult.getBatchNo(),null);
 							}
 						}
 					}
@@ -95,5 +79,22 @@ public class TaskMonitor {
 		}
 		
 	}
+
+	public JMSService getNotifyClientService() {
+		return notifyClientService;
+	}
+
+	public void setNotifyClientService(JMSService notifyClientService) {
+		this.notifyClientService = notifyClientService;
+	}
+
+	public JMSService getReplyClientService() {
+		return replyClientService;
+	}
+
+	public void setReplyClientService(JMSService replyClientService) {
+		this.replyClientService = replyClientService;
+	}
+	
 
 }

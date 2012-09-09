@@ -21,18 +21,10 @@ import com.travelsky.pcc.reacc.tpc.status.TaskContextManager;
  */
 public class TaskParallelClient implements TaskParallelClientInterface<Object> {
 
-	private JMSService senderAndReplyService;
+	private JMSService sendAndReplyClientService;
 	
 	private TaskContextManager taskContextManager;
 	
-	public JMSService getSenderAndReplyService() {
-		return senderAndReplyService;
-	}
-
-	public void setSenderAndReplyService(JMSService senderAndReplyService) {
-		this.senderAndReplyService = senderAndReplyService;
-	}
-
 	public TaskContextManager getTaskContextManager() {
 		return taskContextManager;
 	}
@@ -46,7 +38,7 @@ public class TaskParallelClient implements TaskParallelClientInterface<Object> {
 		String springBean = messageProperties.get( StaticProperties.ParallelComputerSpringBean);
 		taskContextManager.addTaskResult(batchNo, tasks.size(),springBean);
 		for (Object task : tasks) {
-			senderAndReplyService.send((Serializable) task, batchNo,messageProperties);
+			sendAndReplyClientService.send((Serializable) task, batchNo,messageProperties);
 		}
 	}
 
@@ -56,14 +48,23 @@ public class TaskParallelClient implements TaskParallelClientInterface<Object> {
 		String springBean = messageProperties.get(StaticProperties.ParallelComputerSpringBean);
 		taskContextManager.addTaskResult(batchNo, tasks.size(),false,springBean);
 		for (Object task : tasks) {
-			senderAndReplyService.send((Serializable) task, batchNo,messageProperties);
+			sendAndReplyClientService.send((Serializable) task, batchNo,messageProperties);
 		}
-		ObjectMessage msg = (ObjectMessage)senderAndReplyService.waitforReply(batchNo, excuteTimeout);
+		ObjectMessage msg = (ObjectMessage)sendAndReplyClientService.waitforReply(batchNo, excuteTimeout);
 		try {
 			return (TaskResult)msg.getObject();
 		} catch (JMSException e) {
 			throw new TaskExcutedReplyException(e);
 		}
 	}
+
+	public JMSService getSendAndReplyClientService() {
+		return sendAndReplyClientService;
+	}
+
+	public void setSendAndReplyClientService(JMSService sendAndReplyClientService) {
+		this.sendAndReplyClientService = sendAndReplyClientService;
+	}
+	
 
 }

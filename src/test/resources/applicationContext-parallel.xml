@@ -145,7 +145,6 @@
 
 	<bean id="MonitorBatchTask" class="com.travelsky.pcc.reacc.tpc.status.TaskMonitor"
 		init-method="init" destroy-method="destroy" depends-on="taskContextManager">
-		<property name="notifyClientService" ref="notifyClientService" />
 		<property name="replyClientService" ref="replyClientService" />
 		<property name="taskContextManager" ref="taskContextManager" />
 		<property name="interval" value="${taskMonitor.interval}"></property>

@@ -1,7 +1,6 @@
 package com.travelsky.pcc.reacc.tpc.client.test;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -14,7 +13,6 @@ import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputingInterface;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedException;
-import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "/person-test.xml" })

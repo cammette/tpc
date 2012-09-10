@@ -21,8 +21,6 @@ public class TaskMonitor {
 	
 	private TaskContextManager taskContextManager;
 	
-	private JMSService notifyClientService;
-	
 	private JMSService replyClientService;
 	
 	private long interval = 10;
@@ -64,11 +62,8 @@ public class TaskMonitor {
 						taskContextManager.removeTaskResult(taskResults);
 						for (TaskResult taskResult : taskResults) {
 							taskResult.setEndTime(new Date());
-							if(taskResult.isAsyn()){
-								notifyClientService.send(taskResult, null,null);
-							}else{
+							
 								replyClientService.send(taskResult, taskResult.getBatchNo(),null);
-							}
 						}
 					}
 					Thread.sleep(interval);
@@ -78,14 +73,6 @@ public class TaskMonitor {
 			}
 		}
 		
-	}
-
-	public JMSService getNotifyClientService() {
-		return notifyClientService;
-	}
-
-	public void setNotifyClientService(JMSService notifyClientService) {
-		this.notifyClientService = notifyClientService;
 	}
 
 	public JMSService getReplyClientService() {

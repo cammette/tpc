@@ -27,10 +27,6 @@
 	<queue name="travelskyReplyQueue">
 		<entry name="/queue/travelskyReplyQueue" />
 	</queue>
-
-	<queue name="deadLetterQueue">
-		<entry name="/queue/deadLetterQueue" />
-	</queue>
 	
 	<queue name="travelskyGroupQueue">
 		<entry name="/queue/travelskyGroupQueue" />

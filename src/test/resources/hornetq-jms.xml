@@ -16,25 +16,26 @@
 	</connection-factory>
 
 	<!--the queue used by the example -->
-	<queue name="travelskyQueue">
-		<entry name="/queue/travelskyQueue" />
+	<queue name="taskUnitQueue">
+		<entry name="/queue/taskUnitQueue" />
 	</queue>
 	
-    <queue name="travelskyNotifyQueue">
-		<entry name="/queue/travelskyNotifyQueue" />
+	<queue name="taskUnitReplyQueue">
+		<entry name="/queue/taskUnitReplyQueue" />
 	</queue>
 	
-	<queue name="travelskyReplyQueue">
-		<entry name="/queue/travelskyReplyQueue" />
-	</queue>
-	
-	<queue name="travelskyGroupQueue">
-		<entry name="/queue/travelskyGroupQueue" />
+    <queue name="taskNotifyQueue">
+		<entry name="/queue/taskNotifyQueue" />
 	</queue>
 	
 	
-	<queue name="travelskyGroupReplyQueue">
-		<entry name="/queue/travelskyGroupReplyQueue" />
+	<queue name="taskGroupQueu">
+		<entry name="/queue/taskGroupQueue" />
+	</queue>
+	
+	
+	<queue name="taskGroupReplyQueue">
+		<entry name="/queue/taskGroupReplyQueue" />
 	</queue>
 	<queue name="test">
 		<entry name="/queue/test" />

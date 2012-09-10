@@ -12,6 +12,7 @@ import javax.jms.TextMessage;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.log4j.Logger;
+import org.hornetq.api.core.client.ClientMessage;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -48,7 +49,7 @@ public class TravelskyParallelDoTaskListener extends AbstractTaskListener implem
 			 if(proName.equals(StaticProperties.ParallelComputerSpringBean)){
 				 springBeanName = msg.getStringProperty(proName);
 			 }
-			 else if(!proName.equals(StaticProperties.BATCH_NO)&&!proName.equals(StaticProperties.JMS_PROPERTIRES_NAME)){
+			 else if(!proName.equals(StaticProperties.BATCH_NO)&&!proName.equals(StaticProperties.JMS_PROPERTIRES_NAME)&&!proName.equals(ClientMessage.HDR_DUPLICATE_DETECTION_ID.toString())){
 				 taskBindMap.put(proName, msg.getStringProperty(proName));
 			 }
 		}

@@ -27,7 +27,7 @@ import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
  * @author bingo
  *
  */
-public class TravelskyParallelDoTaskistener extends AbstractTaskListener implements ApplicationContextAware{
+public class TravelskyParallelDoTaskListener extends AbstractTaskListener implements ApplicationContextAware{
 	
 	private Logger log = Logger.getLogger(getClass());
 	

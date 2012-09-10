@@ -35,7 +35,7 @@
 	</bean>
 
 	<bean id="taskListener"
-		class="com.travelsky.pcc.reacc.tpc.client.listener.TravelskyParallelDoTaskistener"
+		class="com.travelsky.pcc.reacc.tpc.client.listener.TravelskyParallelDoTaskListener"
 		parent="abstractTaskListener">
 	</bean>
 

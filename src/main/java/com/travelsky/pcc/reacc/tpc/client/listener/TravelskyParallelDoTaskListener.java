@@ -12,6 +12,8 @@ import javax.jms.TextMessage;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.log4j.Logger;
+import org.hornetq.jms.client.HornetQObjectMessage;
+import org.hornetq.api.core.client.ClientMessage;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -19,6 +21,7 @@ import org.springframework.context.ApplicationContextAware;
 import com.travelsky.pcc.reacc.tpc.AbstractTaskListener;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedException;
+import com.travelsky.pcc.reacc.tpc.exception.TpcRetryException;
 import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 
 /**
@@ -69,9 +72,27 @@ public class TravelskyParallelDoTaskListener extends AbstractTaskListener implem
 			taskUnitResult.setIsSuccess(true);
 			taskUnitResult.setTaskResult((Serializable)returnObject);
 		} catch (Throwable e) {
-			log.error("excuted the task unsuccessfully",e);
-			taskUnitResult.setMsg(e.toString());
-			taskUnitResult.setIsSuccess(false);
+			if(e.getCause() instanceof TpcRetryException){
+				//ClientMessage clientMsg = (ClientMessage) msg;
+				//log.info("delivery count:"+clientMsg.getDeliveryCount());
+			//	msg.
+			   // int i =	msg.getIntProperty(ClientMessage.);
+				HornetQObjectMessage hornetMsg = (HornetQObjectMessage)msg;
+                int deliveryCount= hornetMsg.getCoreMessage().getDeliveryCount();
+                if(deliveryCount==3){
+                	
+                }
+               // hornetMsg.get
+				taskUnitResult = null;
+				//msg.get
+				//msg.get
+				throw (TpcRetryException) e.getCause();
+			}
+			else{
+				log.error("excuted the task unsuccessfully",e);
+				taskUnitResult.setMsg(e.toString());
+				taskUnitResult.setIsSuccess(false);
+			}
 		} 
 		return taskUnitResult;
 	}

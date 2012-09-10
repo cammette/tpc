@@ -34,15 +34,6 @@ public class TaskParallelClient implements TaskParallelClientInterface<Object> {
 	}
 
 	@Override
-	public void executeAsyn(List<Object> tasks, String batchNo,Map<String, String> messageProperties) {
-		String springBean = messageProperties.get( StaticProperties.ParallelComputerSpringBean);
-		taskContextManager.addTaskResult(batchNo, tasks.size(),springBean);
-		for (Object task : tasks) {
-			sendAndReplyClientService.send((Serializable) task, batchNo,messageProperties);
-		}
-	}
-
-	@Override
 	public TaskResult executeSync(List<Object> tasks, String batchNo,
 			long excuteTimeout,Map<String, String> messageProperties) throws TaskExcutedReplyTimeoutException {
 		String springBean = messageProperties.get(StaticProperties.ParallelComputerSpringBean);

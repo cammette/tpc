@@ -22,7 +22,7 @@ import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 
 public class TaskGroupListener implements MessageListener {
 
-	private long waitForReplyGroupTask = 3000;
+	private long waitForReplyGroupTask = 120000;
 	private Logger log = Logger.getLogger(getClass());
 	private TaskParallelClientInterface<Object> taskParallelClientInterface;
 	private JMSService notifyClientService;

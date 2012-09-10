@@ -15,8 +15,8 @@ import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
  * @param <T> 代表一个任务单元，必须支持Java序列化
  * @param <U> 代表一个任务单元的执行结果，必须支持Java序列化
  */
-public abstract class TravelskyParallelComputerTemplate<P, T, U> implements
-		TravelskyParallelComputerInterface<P> {
+public abstract class TravelskyParallelComputingTemplate<P, T, U> implements
+		TravelskyParallelComputingInterface<P> {
 
 	private TaskGroupParallelClientInterface<T> taskGroupParallelClientInterface;
 	

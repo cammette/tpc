@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.client.TaskGroup;
 import com.travelsky.pcc.reacc.tpc.client.TaskParallelClientInterface;
-import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
 import com.travelsky.pcc.reacc.tpc.jms.JMSService;
 import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
@@ -30,14 +29,15 @@ public class TaskGroupListener implements MessageListener {
 	private JMSService replyGroupService;
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void onMessage(Message message) {
 		ObjectMessage msg = (ObjectMessage) message;
 		Map<String, String> messageProperties = new HashMap<String, String>();
 		List<TaskGroup<Object>> taskGroups = null;
 		try {
 			String proName = "";
-			for (Enumeration e = msg.getPropertyNames(); e.hasMoreElements();) {
-				proName = (String) e.nextElement();
+			for (Enumeration<String> e = msg.getPropertyNames(); e.hasMoreElements();) {
+				proName =  e.nextElement();
 				messageProperties.put(proName, msg.getStringProperty(proName));
 			}
 			String batchNo = msg.getStringProperty(StaticProperties.BATCH_NO);

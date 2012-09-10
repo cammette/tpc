@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
-import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerInterface;
+import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputingInterface;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedException;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
 
@@ -21,7 +21,7 @@ import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
 public class PersonTest {
 	private Logger log = Logger.getLogger(getClass());
 	@Autowired
-	private TravelskyParallelComputerInterface<Object> travelskyParallelComputerInterface;
+	private TravelskyParallelComputingInterface<Object> travelskyParallelComputerInterface;
 
 	@Test
 	public void testTravelskyParallelComputerExcuteAsyn()

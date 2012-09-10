@@ -18,9 +18,7 @@ import org.springframework.context.ApplicationContextAware;
 
 import com.travelsky.pcc.reacc.tpc.AbstractTaskListener;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
-import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedException;
-import com.travelsky.pcc.reacc.tpc.jms.JMSService;
 import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 
 /**

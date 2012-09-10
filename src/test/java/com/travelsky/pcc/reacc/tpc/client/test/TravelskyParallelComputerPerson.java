@@ -11,10 +11,10 @@ import org.apache.log4j.Logger;
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.client.TaskGroup;
-import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate;
+import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputingTemplate;
 
 public class TravelskyParallelComputerPerson extends
-		TravelskyParallelComputerTemplate<TtestBean, Person, ReturnBean> {
+		TravelskyParallelComputingTemplate<TtestBean, Person, ReturnBean> {
 	protected Logger log = Logger.getLogger(getClass());
 	@Override
 	protected List<TaskGroup<Person>> split(TtestBean p) {

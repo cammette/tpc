@@ -9,7 +9,7 @@ import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
  *
  * @param <P>用户定义的类型，并行执行任务的参数
  */
-public interface TravelskyParallelComputerInterface<P> {
+public interface TravelskyParallelComputingInterface<P> {
 	/**
 	 * 异步执行任务接口
 	 * @param p

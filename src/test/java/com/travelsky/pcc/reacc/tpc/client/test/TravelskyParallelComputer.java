@@ -8,10 +8,10 @@ import java.util.Map;
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.client.TaskGroup;
-import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate;
+import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputingTemplate;
 
 public class TravelskyParallelComputer extends
-		TravelskyParallelComputerTemplate<Integer, String, String> {
+		TravelskyParallelComputingTemplate<Integer, String, String> {
 	
 	public static int size = 0;
 

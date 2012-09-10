@@ -7,7 +7,6 @@ import javax.jms.MessageListener;
 import org.apache.log4j.Logger;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
-import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate;
 import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 import com.travelsky.pcc.reacc.tpc.status.TaskContextManager;
 /**

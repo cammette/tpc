@@ -160,8 +160,8 @@
 		<property name="sendAndReplyGroupService" ref="sendAndReplyGroupService" />
 	</bean>
 	
-	<bean id="travelskyParallelComputerTemplate"
-		class="com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputerTemplate" abstract="true">
+	<bean id="travelskyParallelComputingTemplate"
+		class="com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputingTemplate" abstract="true">
 		<property name="taskGroupParallelClientInterface" ref="taskGroupParallelClientInterface"/>
 	</bean>
 

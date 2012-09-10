@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 
-
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyException;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
@@ -32,15 +31,6 @@ public class TaskParallelClient implements TaskParallelClientInterface<Object> {
 
 	public void setTaskContextManager(TaskContextManager taskContextManager) {
 		this.taskContextManager = taskContextManager;
-	}
-
-	@Override
-	public void executeAsyn(List<Object> tasks, String batchNo,Map<String, String> messageProperties) {
-		String springBean = messageProperties.get( StaticProperties.ParallelComputerSpringBean);
-		taskContextManager.addTaskResult(batchNo, tasks.size(),springBean);
-		for (Object task : tasks) {
-			sendAndReplyClientService.send((Serializable) task, batchNo,messageProperties);
-		}
 	}
 
 	@Override

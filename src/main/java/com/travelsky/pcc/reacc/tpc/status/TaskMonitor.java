@@ -62,8 +62,7 @@ public class TaskMonitor {
 						taskContextManager.removeTaskResult(taskResults);
 						for (TaskResult taskResult : taskResults) {
 							taskResult.setEndTime(new Date());
-							
-								replyClientService.send(taskResult, taskResult.getBatchNo(),null);
+							replyClientService.send(taskResult, taskResult.getBatchNo(),null);
 						}
 					}
 					Thread.sleep(interval);

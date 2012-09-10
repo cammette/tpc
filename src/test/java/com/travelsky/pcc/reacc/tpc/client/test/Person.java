@@ -1,0 +1,39 @@
+package com.travelsky.pcc.reacc.tpc.client.test;
+
+public class Person implements java.io.Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2388183799406668906L;
+	/**
+	 * 
+	 */
+	private String name;
+	private String id;
+	/**
+	 * 用于异常测试
+	 */
+	private boolean isRetry = false;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public boolean isRetry() {
+		return isRetry;
+	}
+	public void setRetry(boolean isRetry) {
+		this.isRetry = isRetry;
+	}
+	
+	
+
+}

@@ -1,13 +1,16 @@
 package com.travelsky.pcc.reacc.tpc.jms;
 
 import java.io.Serializable;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.Set;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
+import javax.jms.QueueBrowser;
 import javax.jms.Session;
 
 import org.apache.log4j.Logger;
@@ -31,14 +34,15 @@ public class JMSService {
 	private Queue replyQueue;
 
 	private JmsConnectionPool jmsConnectionPool;
-	
-	private JmsConnectionPool replyJmsConnectionPool; 
-	
+
+	private JmsConnectionPool replyJmsConnectionPool;
+
 	public JmsConnectionPool getReplyJmsConnectionPool() {
 		return replyJmsConnectionPool;
 	}
 
-	public void setReplyJmsConnectionPool(JmsConnectionPool replyJmsConnectionPool) {
+	public void setReplyJmsConnectionPool(
+			JmsConnectionPool replyJmsConnectionPool) {
 		this.replyJmsConnectionPool = replyJmsConnectionPool;
 	}
 
@@ -58,7 +62,8 @@ public class JMSService {
 		this.replyQueue = replyQueue;
 	}
 
-	public Message waitforReply(String batchNo, long timeout) throws TaskExcutedReplyTimeoutException {
+	public Message waitforReply(String batchNo, long timeout)
+			throws TaskExcutedReplyTimeoutException {
 		JmsConnectionSession jmsConnectionSession = null;
 		MessageConsumer consumer = null;
 		try {
@@ -104,11 +109,14 @@ public class JMSService {
 			}
 		}
 	}
-	public void send(Serializable msg, String batchNo,Map<String, String> messageProperties) {
+
+	public void send(Serializable msg, String batchNo,
+			Map<String, String> messageProperties) {
 		this.send(msg, batchNo, messageProperties, null);
 	}
 
-	public void send(Serializable msg, String batchNo,Map<String, String> messageProperties,Integer priority) {
+	public void send(Serializable msg, String batchNo,
+			Map<String, String> messageProperties, Integer priority) {
 		JmsConnectionSession jmsConnectionSession = null;
 		MessageProducer producer = null;
 		try {
@@ -126,10 +134,10 @@ public class JMSService {
 			if (batchNo != null && batchNo.length() > 0) {
 				message.setStringProperty(StaticProperties.BATCH_NO, batchNo);
 			}
-			if(priority!=null && priority>0){
+			if (priority != null && priority > 0) {
 				message.setJMSPriority(priority);
 			}
-			if(messageProperties!=null){
+			if (messageProperties != null) {
 				Set<String> keys = messageProperties.keySet();
 				for (String key : keys) {
 					String value = messageProperties.get(key);
@@ -159,6 +167,57 @@ public class JMSService {
 				}
 			}
 		}
+	}
+
+	public Enumeration browserQueue() {
+		return browse(queue);
+
+	}
+
+	public Enumeration browserReplyQueue() {
+		return browse(replyQueue);
+	}
+
+	private Enumeration browse(Queue queue) {
+		if(null==queue){
+			return null;
+		}
+		JmsConnectionSession jmsConnectionSession = null;
+		QueueBrowser browser = null;
+		try {
+			jmsConnectionSession = (JmsConnectionSession) jmsConnectionPool
+					.getJmsConnectionSession();
+			Session session = jmsConnectionSession.getSession();
+			browser = session.createBrowser(queue);
+			return browser.getEnumeration();
+		} catch (Exception e) {
+			try {
+				log.error("browse fail:queue name:" + queue.getQueueName(), e);
+			} catch (JMSException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			if(null!=browser){
+				try {
+					browser.close();
+				} catch (JMSException e) {
+					log.error("close browse unsuccessfully",e);
+				}
+			}
+			if (jmsConnectionSession != null) {
+				try {
+					jmsConnectionPool
+							.returnJmsConnectionSession(jmsConnectionSession);
+				} catch (Exception e) {
+					log.error(
+							"put the jmsConnectionSession to back the pool unsuccessfully",
+							e);
+				}
+			}
+		}
+		return null;
 	}
 
 }

@@ -19,28 +19,31 @@ public class TravelskyParallelComputerPerson extends
 	protected Logger log = Logger.getLogger(getClass());
 	
 	@Override
-	protected List<TaskGroup<Person>> split(TtestBean p) {
-		if(p.isNull()){
+	protected List<TaskGroup<Person>> split(TtestBean testBean) {
+		if(testBean.isNull()){
 			return null;
 		}
 		List<TaskGroup<Person>> taskGroups = new ArrayList<TaskGroup<Person>>();
-		if(p.isSizeZero()){
+		if(testBean.isSizeZero()){
 			return taskGroups;
 		}
 		TaskGroup<Person> taskGroup = new TaskGroup<Person>();
 		Person person = null;
-		if(p.isRetry()){
-			p.setSendListsize(1);
-			p.setSendSize(1);
+		if(testBean.isRetry()){
+			testBean.setSendListsize(1);
+			testBean.setSendSize(1);
 		}
-		for (int j = 0; j < p.getSendListsize(); j++) {
+		for (int j = 0; j < testBean.getSendListsize(); j++) {
 			taskGroup = new TaskGroup<Person>();
-			for (int i = 0; i < p.getSendSize(); i++) {
+			for (int i = 0; i < testBean.getSendSize(); i++) {
 				person = new Person();
 				person.setId("j= "+j+" i= "+i + "");
 				person.setName("name中文测试" + i+":"+j);
-				if(p.isRetry()){
+				if(testBean.isRetry()){
 					person.setRetry(true);
+				}
+				if(testBean.isShutdown()){
+					person.setSleep(5000);
 				}
 				taskGroup.add(person);
 			}
@@ -56,17 +59,17 @@ public class TravelskyParallelComputerPerson extends
 	}
 
 	@Override
-	public ReturnBean doTaskUnit(Person t) {
+	public ReturnBean doTaskUnit(Person person) {
 		ReturnBean returnBean = new ReturnBean();
-		returnBean.setId(t.getId());
-		if(t.isRetry()){
+		returnBean.setId(person.getId());
+		if(person.isRetry()){
 			//异常测试
 			throw new TpcRetryException("retry exception test");
 		}
-		returnBean.setResult(t.getName()+" doTaskUnit");
-		log.info(Thread.currentThread().getName()+":"+t.getId());
+		returnBean.setResult(person.getName()+" doTaskUnit");
+		log.info(Thread.currentThread().getName()+":"+person.getId());
 		try {
-			Thread.sleep(100);
+			Thread.sleep(person.getSleep());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,6 +80,11 @@ public class TravelskyParallelComputerPerson extends
 	@Override
 	public void join(TaskResult taskResult) {
 		log.info("join "+taskResult.toString());
+		for(TaskUnitResult unit : taskResult.getTaskUnitResults()){
+			if(""!=unit.getMsg()){
+				log.info(unit.getMsg());
+			}
+		}
 	}
 
 	@Override

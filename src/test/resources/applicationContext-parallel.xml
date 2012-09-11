@@ -154,6 +154,7 @@
 		init-method="init" destroy-method="destroy" depends-on="taskContextManager">
 		<property name="replyClientService" ref="replyClientService" />
 		<property name="taskContextManager" ref="taskContextManager" />
+		<property name="unReplyInterval" value="${unreply.montior.interval}"></property>
 		<property name="interval" value="${taskMonitor.interval}"></property>
 	</bean>
 

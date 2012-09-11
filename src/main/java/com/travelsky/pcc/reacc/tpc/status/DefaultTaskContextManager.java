@@ -29,6 +29,9 @@ public class DefaultTaskContextManager implements TaskContextManager {
 		}
 		String batchNo =  taskUnitResult.getBatchNo();
 		TaskResult allBatchBean = taskResultMap.get(batchNo);
+		if(null==allBatchBean){
+			
+		}
 		taskUnitResult.setBatchNo(batchNo);
 		allBatchBean.addtTaskUnitResults(taskUnitResult);
 		if (taskUnitResult.getIsSuccess()) {

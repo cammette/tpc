@@ -16,4 +16,7 @@ public class StaticProperties {
 	public static final String ParallelComputerSpringBean = "P_C_S";
 	
 	public final static int MAX_RETRY_TIMES = Integer.parseInt(System.getProperty("retry.times"));
+	
+	public final static int TASK_SIZE_DEFAULT = -1;
+	
 }

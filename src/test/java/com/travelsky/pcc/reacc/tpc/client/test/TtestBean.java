@@ -7,6 +7,7 @@ public class TtestBean {
 	private boolean isSizeZero=false;
 	private int sendListsize=3;
 	private int sendSize=5;
+	private boolean isShutdown = false;
 	
 	
 	public boolean isRetry() {
@@ -38,5 +39,11 @@ public class TtestBean {
 	}
 	public void setSendSize(int sendSize) {
 		this.sendSize = sendSize;
+	}
+	public boolean isShutdown() {
+		return isShutdown;
+	}
+	public void setShutdown(boolean isShutdown) {
+		this.isShutdown = isShutdown;
 	}
 }

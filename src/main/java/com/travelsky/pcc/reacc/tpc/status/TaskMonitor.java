@@ -25,21 +25,7 @@ public class TaskMonitor {
 	
 	private long interval = 10;
 	
-	public long getInterval() {
-		return interval;
-	}
-
-	public void setInterval(long interval) {
-		this.interval = interval;
-	}
-	
-	public TaskContextManager getTaskContextManager() {
-		return taskContextManager;
-	}
-
-	public void setTaskContextManager(TaskContextManager taskContextManager) {
-		this.taskContextManager = taskContextManager;
-	}
+	private long unReplyInterval = 100;
 
 	public void init(){
 		isRunning = true;
@@ -73,6 +59,15 @@ public class TaskMonitor {
 		}
 		
 	}
+	
+	class UnReplyMonitorThread implements Runnable {
+
+		@Override
+		public void run() {
+
+		}
+
+	}
 
 	public JMSService getReplyClientService() {
 		return replyClientService;
@@ -80,6 +75,29 @@ public class TaskMonitor {
 
 	public void setReplyClientService(JMSService replyClientService) {
 		this.replyClientService = replyClientService;
+	}
+	public long getInterval() {
+		return interval;
+	}
+
+	public void setInterval(long interval) {
+		this.interval = interval;
+	}
+	
+	public TaskContextManager getTaskContextManager() {
+		return taskContextManager;
+	}
+
+	public void setTaskContextManager(TaskContextManager taskContextManager) {
+		this.taskContextManager = taskContextManager;
+	}
+
+	public long getUnReplyInterval() {
+		return unReplyInterval;
+	}
+
+	public void setUnReplyInterval(long unReplyInterval) {
+		this.unReplyInterval = unReplyInterval;
 	}
 	
 

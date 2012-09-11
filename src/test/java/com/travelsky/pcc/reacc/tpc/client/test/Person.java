@@ -15,6 +15,10 @@ public class Person implements java.io.Serializable{
 	 * 用于异常测试
 	 */
 	private boolean isRetry = false;
+	/**
+	 * 默认任务执行sleep，测试重启时sleep可以设置长一点
+	 */
+	private long sleep=1000;
 	public String getName() {
 		return name;
 	}
@@ -33,7 +37,11 @@ public class Person implements java.io.Serializable{
 	public void setRetry(boolean isRetry) {
 		this.isRetry = isRetry;
 	}
+	public long getSleep() {
+		return sleep;
+	}
+	public void setSleep(long sleep) {
+		this.sleep = sleep;
+	}
 	
-	
-
 }

@@ -9,8 +9,12 @@ public class Person implements java.io.Serializable{
 	/**
 	 * 
 	 */
-	String name;
-	String id;
+	private String name;
+	private String id;
+	/**
+	 * 用于异常测试
+	 */
+	private boolean isRetry = false;
 	public String getName() {
 		return name;
 	}
@@ -23,6 +27,13 @@ public class Person implements java.io.Serializable{
 	public void setId(String id) {
 		this.id = id;
 	}
+	public boolean isRetry() {
+		return isRetry;
+	}
+	public void setRetry(boolean isRetry) {
+		this.isRetry = isRetry;
+	}
+	
 	
 
 }

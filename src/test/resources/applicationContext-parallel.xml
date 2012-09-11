@@ -65,7 +65,7 @@
 		<property name="connectionFactory" ref="ConnectionFactory" />
 		<property name="destination" ref="/queue/taskUnitQueue" />
 		<property name="messageListener" ref="taskListener" />
-		<property name="sessionTransacted" value="false"></property>
+		<property name="sessionTransacted" value="true"></property>
 		<property name="concurrentConsumers" value="${excuteTask.threadPool.size}" />
 		<property name="maxConcurrentConsumers" value="${excuteTask.threadPool.size}" />
 	</bean>

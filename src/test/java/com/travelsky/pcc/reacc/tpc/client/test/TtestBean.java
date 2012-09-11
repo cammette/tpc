@@ -2,17 +2,18 @@ package com.travelsky.pcc.reacc.tpc.client.test;
 
 public class TtestBean {
 	
-	private boolean isSingle =false;
+	private boolean isRetry =false;
 	private boolean isNull=false;
 	private boolean isSizeZero=false;
 	private int sendListsize=3;
 	private int sendSize=5;
 	
-	public boolean isSingle() {
-		return isSingle;
+	
+	public boolean isRetry() {
+		return isRetry;
 	}
-	public void setSingle(boolean isSingle) {
-		this.isSingle = isSingle;
+	public void setRetry(boolean isRetry) {
+		this.isRetry = isRetry;
 	}
 	public boolean isNull() {
 		return isNull;

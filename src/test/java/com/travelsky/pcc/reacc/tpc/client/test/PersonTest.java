@@ -29,12 +29,12 @@ public class PersonTest {
 		bean.setNull(true);
 		requestParallelSync(bean, "asyn split return null", false);
 		bean.setNull(false);
-		bean.setSingle(true);
-		requestParallelSync(bean, "asyn single group", false);
-		bean.setNull(false);
-		bean.setSingle(false);
 		bean.setSizeZero(true);
 		requestParallelSync(bean, "asyn zero group", false);
+		bean.setNull(false);
+		bean.setSizeZero(false);
+		bean.setRetry(true);
+		requestParallelSync(bean, "syn retry ", true);
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
@@ -47,16 +47,21 @@ public class PersonTest {
 			throws TaskExcutedException,
 			com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException {
 		TtestBean bean = new TtestBean();
-		requestParallelSync(bean, "syn normal test ", true);
-		bean.setNull(true);
-		requestParallelSync(bean, "syn split return null", true);
-		bean.setNull(false);
-		bean.setSingle(true);
-		requestParallelSync(bean, "syn single group", true);
-		bean.setNull(false);
-		bean.setSingle(false);
-		bean.setSizeZero(true);
-		requestParallelSync(bean, "syn zero group", true);
+//		requestParallelSync(bean, "syn normal test ", true);
+//		bean.setNull(true);
+//		requestParallelSync(bean, "syn split return null", true);
+//		bean.setNull(false);
+//		bean.setSizeZero(true);
+//		requestParallelSync(bean, "syn zero group", true);
+//		bean.setNull(false);
+//		bean.setSizeZero(false);
+		bean.setRetry(true);
+		requestParallelSync(bean, "syn retry ", true);
+//		try {
+//			Thread.sleep(50000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	private void requestParallelSync(TtestBean bean, String title, boolean isSyn) {

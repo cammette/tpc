@@ -38,6 +38,8 @@ public class TravelskyParallelDoTaskListener extends AbstractTaskListener implem
 	
 	private final static String doJoinTaskMethodName = "doTaskUnit";
 	
+	
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	protected TaskUnitResult doMessage(Message msg, String batchNo) throws JMSException {
@@ -73,20 +75,17 @@ public class TravelskyParallelDoTaskListener extends AbstractTaskListener implem
 			taskUnitResult.setTaskResult((Serializable)returnObject);
 		} catch (Throwable e) {
 			if(e.getCause() instanceof TpcRetryException){
-				//ClientMessage clientMsg = (ClientMessage) msg;
-				//log.info("delivery count:"+clientMsg.getDeliveryCount());
-			//	msg.
-			   // int i =	msg.getIntProperty(ClientMessage.);
 				HornetQObjectMessage hornetMsg = (HornetQObjectMessage)msg;
                 int deliveryCount= hornetMsg.getCoreMessage().getDeliveryCount();
-                if(deliveryCount==3){
-                	
+                
+                if(deliveryCount==StaticProperties.MAX_RETRY_TIMES){
+                	taskUnitResult.setMsg("retry " +StaticProperties.MAX_RETRY_TIMES + " times,but also has exception :" +e.getCause().toString());
+    				taskUnitResult.setIsSuccess(false);
                 }
-               // hornetMsg.get
-				taskUnitResult = null;
-				//msg.get
-				//msg.get
-				throw (TpcRetryException) e.getCause();
+                else{
+					taskUnitResult = null;
+					throw (TpcRetryException) e.getCause();
+                }
 			}
 			else{
 				log.error("excuted the task unsuccessfully",e);

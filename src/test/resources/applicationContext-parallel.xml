@@ -18,6 +18,13 @@
                 <entry key="hornetq.file">
                     <value>${hornetq.file}</value>
                 </entry>
+                <entry key="retry.times">
+<!--                 retry.times 命名如果改变，得更改StaticProperties里面对应的配置。 -->
+                    <value>${retry.times}</value>
+                </entry>
+                <entry key="retry.delay">
+                    <value>${retry.delay}</value>
+                </entry>
             </map>
         </property>
 	</bean>

@@ -14,4 +14,6 @@ public class StaticProperties {
 	public final static String JMS_PROPERTIRES_NAME="JMSXDeliveryCount";
 	
 	public static final String ParallelComputerSpringBean = "P_C_S";
+	
+	public final static int MAX_RETRY_TIMES = Integer.parseInt(System.getProperty("retry.times"));
 }

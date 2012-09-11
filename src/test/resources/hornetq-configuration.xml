@@ -60,9 +60,9 @@
 			<max-size-bytes>1048576000</max-size-bytes>
 			<message-counter-history-day-limit>10</message-counter-history-day-limit>
 			<address-full-policy>BLOCK</address-full-policy>
-			<redelivery-delay>1000</redelivery-delay>
+			<redelivery-delay>${retry.delay}</redelivery-delay>
 			<dead-letter-address>jms.queue.deadLetterQueue</dead-letter-address>
-			<max-delivery-attempts>5</max-delivery-attempts>
+			<max-delivery-attempts>${retry.times}</max-delivery-attempts>
 		</address-setting>
 	</address-settings>
 

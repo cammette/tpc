@@ -71,6 +71,7 @@ public class TaskGroupListener implements MessageListener {
 				taskResult.setSuccessfulcount(taskResult.getSuccessfulcount()
 						+ temp.getSuccessfulcount());
 				taskResult.setTotalCount(taskResult.getTotalCount()+ temp.getTotalCount());
+				groupNo++;
 			}
 			taskResult.setEndTime(new Date());
 			if (synOrAsyn.equals(StaticProperties.MS_VALUE_SYN)) {

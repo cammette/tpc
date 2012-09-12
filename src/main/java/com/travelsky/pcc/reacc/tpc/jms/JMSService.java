@@ -168,12 +168,17 @@ public class JMSService {
 			}
 		}
 	}
-
+    /**
+     * 获取queue队列的消息列表
+     * @return
+     */
 	public Enumeration browserQueue() {
 		return browse(queue);
-
 	}
-
+	/**
+     * 获取replyQueue队列的消息列表
+     * @return
+     */
 	public Enumeration browserReplyQueue() {
 		return browse(replyQueue);
 	}

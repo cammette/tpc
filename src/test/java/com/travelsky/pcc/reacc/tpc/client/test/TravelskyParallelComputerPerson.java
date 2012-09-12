@@ -13,6 +13,7 @@ import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.client.TaskGroup;
 import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputingTemplate;
 import com.travelsky.pcc.reacc.tpc.exception.TpcRetryException;
+import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 
 public class TravelskyParallelComputerPerson extends
 		TravelskyParallelComputingTemplate<TtestBean, Person, ReturnBean> {
@@ -33,6 +34,8 @@ public class TravelskyParallelComputerPerson extends
 			testBean.setSendListsize(1);
 			testBean.setSendSize(1);
 		}
+		log.info("groupSize:"+testBean.getSendListsize());
+		log.info("send single list size:"+testBean.getSendSize());
 		for (int j = 0; j < testBean.getSendListsize(); j++) {
 			taskGroup = new TaskGroup<Person>();
 			for (int i = 0; i < testBean.getSendSize(); i++) {
@@ -67,7 +70,7 @@ public class TravelskyParallelComputerPerson extends
 			throw new TpcRetryException("retry exception test");
 		}
 		returnBean.setResult(person.getName()+" doTaskUnit");
-		log.info(Thread.currentThread().getName()+":"+person.getId());
+		log.info(Thread.currentThread().getName()+":doTaskUnit--"+person.getId());
 		try {
 			Thread.sleep(person.getSleep());
 		} catch (InterruptedException e) {
@@ -79,6 +82,9 @@ public class TravelskyParallelComputerPerson extends
 
 	@Override
 	public void join(TaskResult taskResult) {
+		if(taskResult.getTotalCount()==StaticProperties.TASK_SIZE_UNKNOW){
+			log.info("join: task restart ok:-------------");
+		}
 		log.info("join "+taskResult.toString());
 		for(TaskUnitResult unit : taskResult.getTaskUnitResults()){
 			if(""!=unit.getMsg()){

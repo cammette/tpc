@@ -1,6 +1,7 @@
 package com.travelsky.pcc.reacc.tpc.status;
 
 import java.util.List;
+import java.util.Map;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
@@ -11,8 +12,16 @@ import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
  * 
  */
 public interface TaskContextManager {
-	public void resume();
-
+	/**
+	 * 获取结果为完成时标识
+	 */
+	 int GET_TASK_TYPE_DONE = 1;
+    /**
+     * 获取结果为任务大小未知时标识
+     */
+	 int GET_TASK_TYPE_UNKNOW = 2;
+	
+	 void resume();
 	/**
 	 * 添加一个批次任务，异步执行
 	 * @param batchNo   批次id
@@ -48,5 +57,10 @@ public interface TaskContextManager {
 	 * @return
 	 */
 	public List<TaskResult> getDoneTask();
+	/**
+	 * 整个map
+	 * @return
+	 */
+	public List<TaskResult> getUnknowTaskSize();
 
 }

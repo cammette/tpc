@@ -8,12 +8,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
+import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 
 /**
  * 任务执行状态管理的内存实现
  * 
  * @author bingo
- *
+ * 
  */
 public class DefaultTaskContextManager implements TaskContextManager {
 
@@ -23,14 +24,15 @@ public class DefaultTaskContextManager implements TaskContextManager {
 	}
 
 	@Override
-	public void addTaskUnitResult(TaskUnitResult taskUnitResult,String beanName) {
-		if(null == taskUnitResult){
+	public void addTaskUnitResult(TaskUnitResult taskUnitResult, String beanName) {
+		if (null == taskUnitResult) {
 			return;
 		}
-		String batchNo =  taskUnitResult.getBatchNo();
+		String batchNo = taskUnitResult.getBatchNo();
 		TaskResult allBatchBean = taskResultMap.get(batchNo);
-		if(null==allBatchBean){
-			
+		if (null == allBatchBean) {
+			addTaskResult(batchNo, StaticProperties.TASK_SIZE_UNKNOW, beanName);
+			allBatchBean = taskResultMap.get(batchNo);
 		}
 		taskUnitResult.setBatchNo(batchNo);
 		allBatchBean.addtTaskUnitResults(taskUnitResult);
@@ -43,16 +45,7 @@ public class DefaultTaskContextManager implements TaskContextManager {
 
 	@Override
 	public List<TaskResult> getDoneTask() {
-		Set<String> keys = taskResultMap.keySet();
-		String[] keyArray = keys.toArray(new String[] {});// 目的为了解决遍历该集合时，allBatchBeanMap有添加key的情况。
-		List<TaskResult> allBatchBeans = new ArrayList<TaskResult>();
-		for (String key : keyArray) {
-			TaskResult allBatchBean = taskResultMap.get(key);
-			if (allBatchBean.isDone()) {
-				allBatchBeans.add(allBatchBean);
-			}
-		}
-		return allBatchBeans;
+		return getTaskResult(GET_TASK_TYPE_DONE);
 	}
 
 	@Override
@@ -68,12 +61,13 @@ public class DefaultTaskContextManager implements TaskContextManager {
 	}
 
 	@Override
-	public void addTaskResult(String batchNo, Integer count,String beanName) {
-		addTaskResult(batchNo,  count,  true,beanName);
+	public void addTaskResult(String batchNo, Integer count, String beanName) {
+		addTaskResult(batchNo, count, true, beanName);
 	}
 
 	@Override
-	public void addTaskResult(String batchNo, Integer count, boolean asyn,String beanName) {
+	public void addTaskResult(String batchNo, Integer count, boolean asyn,
+			String beanName) {
 		if (taskResultMap.containsKey(batchNo)) {
 			taskResultMap.remove(batchNo);
 		}
@@ -85,6 +79,37 @@ public class DefaultTaskContextManager implements TaskContextManager {
 		allBatchBean.setBeanName(beanName);
 		taskResultMap.put(batchNo, allBatchBean);
 
+	}
+
+	@Override
+	public List<TaskResult> getUnknowTaskSize() {
+		return getTaskResult(GET_TASK_TYPE_UNKNOW);
+	}
+
+	private List<TaskResult> getTaskResult(int type) {
+		Set<String> keys = taskResultMap.keySet();
+		String[] keyArray = keys.toArray(new String[] {});// 目的为了解决遍历该集合时，allBatchBeanMap有添加key的情况。
+		List<TaskResult> allBatchBeans = new ArrayList<TaskResult>();
+		for (String key : keyArray) {
+			TaskResult allBatchBean = taskResultMap.get(key);
+			switch (type) {
+			case (GET_TASK_TYPE_DONE):
+				if (allBatchBean.isDone()) {
+					allBatchBeans.add(allBatchBean);
+				}
+				break;
+			case (GET_TASK_TYPE_UNKNOW):
+				if (allBatchBean.getTotalCount().equals(
+						StaticProperties.TASK_SIZE_UNKNOW)) {
+					allBatchBeans.add(allBatchBean);
+				}
+				break;
+			default:
+				break;
+			}
+
+		}
+		return allBatchBeans;
 	}
 
 }

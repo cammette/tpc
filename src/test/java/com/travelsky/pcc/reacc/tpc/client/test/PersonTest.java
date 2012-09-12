@@ -1,6 +1,5 @@
 package com.travelsky.pcc.reacc.tpc.client.test;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,7 +8,6 @@ import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedException;
 
 
 public class PersonTest extends TestBase{
-	private Logger log = Logger.getLogger(getClass());
 	@Autowired
 	private TravelskyParallelComputingInterface<Object> travelskyParallelComputerInterface;
 

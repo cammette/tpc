@@ -1,12 +1,17 @@
 package com.travelsky.pcc.reacc.tpc.status;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
+
+import javax.jms.Message;
 
 import org.apache.log4j.Logger;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.jms.JMSService;
+import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 
 /**
  * 负责监听完成任务，获取到完成的任务列表后，发送任务完成通知
@@ -23,14 +28,20 @@ public class TaskMonitor {
 	
 	private JMSService replyClientService;
 	
+	private JMSService notifyClientService;
+	
+	private JMSService sendAndReplyClientService;
+	
 	private long interval = 10;
 	
-	private long unReplyInterval = 100;
+	private long unReplyInterval = 1000;
 
 	public void init(){
 		isRunning = true;
 		TaskMonitorThead taskMonitorThead = new TaskMonitorThead();
 		new Thread(taskMonitorThead, "monitor_task-thread").start();
+		UnknowSizeMonitorThread taskUnreplyMonitorThead = new UnknowSizeMonitorThread();
+		new Thread(taskUnreplyMonitorThead, "monitor_task-unreply-thread").start();
 	}
 	
 	public void destroy(){
@@ -60,10 +71,46 @@ public class TaskMonitor {
 		
 	}
 	
-	class UnReplyMonitorThread implements Runnable {
+	class UnknowSizeMonitorThread implements Runnable {
 
 		@Override
 		public void run() {
+			while(isRunning){
+				try {
+					List<TaskResult> taskResultsSizeUnkonw = taskContextManager.getUnknowTaskSize() ;
+					Enumeration messageEnum = sendAndReplyClientService.browserQueue();
+					List<TaskResult> temp = new ArrayList<TaskResult>();
+					String batchNo="";
+					Message message=null;
+			        while (messageEnum.hasMoreElements())
+			         {
+			        	if(taskResultsSizeUnkonw.size()==0){
+			        		break;
+			        	}
+			            message = (Message)messageEnum.nextElement();
+			            batchNo=message.getStringProperty(StaticProperties.BATCH_NO);
+			            if(null!=batchNo){
+			            	for (TaskResult taskResult : taskResultsSizeUnkonw) {
+								if(batchNo.equals(taskResult.getBatchNo())){
+									temp.add(taskResult);
+								}
+							}
+			            	taskResultsSizeUnkonw.removeAll(temp);
+			            	temp.clear();
+			            }
+			        }
+					if(taskResultsSizeUnkonw.size()>0){
+						for (TaskResult taskResult : taskResultsSizeUnkonw) {
+							taskResult.setEndTime(new Date());
+							notifyClientService.send(taskResult, taskResult.getBatchNo(),null);
+						}
+					}
+					taskContextManager.removeTaskResult(taskResultsSizeUnkonw);
+					Thread.sleep(unReplyInterval);
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
 
 		}
 
@@ -98,6 +145,22 @@ public class TaskMonitor {
 
 	public void setUnReplyInterval(long unReplyInterval) {
 		this.unReplyInterval = unReplyInterval;
+	}
+
+	public JMSService getNotifyClientService() {
+		return notifyClientService;
+	}
+
+	public void setNotifyClientService(JMSService notifyClientService) {
+		this.notifyClientService = notifyClientService;
+	}
+
+	public JMSService getSendAndReplyClientService() {
+		return sendAndReplyClientService;
+	}
+
+	public void setSendAndReplyClientService(JMSService sendAndReplyClientService) {
+		this.sendAndReplyClientService = sendAndReplyClientService;
 	}
 	
 

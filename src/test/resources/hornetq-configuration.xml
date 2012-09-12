@@ -18,6 +18,8 @@
 
 	<large-messages-directory>${hornetq.file}/hornetq/largemessages
 	</large-messages-directory>
+	
+<!-- 发出消息前就更新记数器	<persist-delivery-count-before-delivery>true</persist-delivery-count-before-delivery> -->
 
 	<paging-directory>${hornetq.file}/hornetq/paging</paging-directory>
 

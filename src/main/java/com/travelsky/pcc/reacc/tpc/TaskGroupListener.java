@@ -12,6 +12,7 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
 import org.apache.log4j.Logger;
+import org.hornetq.jms.client.HornetQObjectMessage;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.client.TaskGroup;
@@ -19,6 +20,7 @@ import com.travelsky.pcc.reacc.tpc.client.TaskParallelClientInterface;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
 import com.travelsky.pcc.reacc.tpc.jms.JMSService;
 import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
+import com.travelsky.pcc.reacc.tpc.status.TaskContextManager;
 
 public class TaskGroupListener implements MessageListener {
 
@@ -27,7 +29,8 @@ public class TaskGroupListener implements MessageListener {
 	private TaskParallelClientInterface<Object> taskParallelClientInterface;
 	private JMSService notifyClientService;
 	private JMSService replyGroupService;
-
+	private TaskContextManager taskContextManager;
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public void onMessage(Message message) {
@@ -125,6 +128,14 @@ public class TaskGroupListener implements MessageListener {
 
 	public void setReplyGroupService(JMSService replyGroupService) {
 		this.replyGroupService = replyGroupService;
+	}
+	
+	public TaskContextManager getTaskContextManager() {
+		return taskContextManager;
+	}
+
+	public void setTaskContextManager(TaskContextManager taskContextManager) {
+		this.taskContextManager = taskContextManager;
 	}
 
 }

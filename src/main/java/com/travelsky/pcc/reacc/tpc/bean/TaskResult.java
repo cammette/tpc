@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
+
 /**
  * 该类代表任务执行结果
  * @author bingo
@@ -142,6 +144,9 @@ public class TaskResult implements Serializable {
 	}
 
 	public boolean isDone() {
+		if(totalCount==StaticProperties.TASK_SIZE_UNKNOW){
+			return false;
+		}
 		if ((failureCount + successfulcount) >= totalCount) {
 			return true;
 		}

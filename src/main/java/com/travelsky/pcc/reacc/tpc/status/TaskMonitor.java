@@ -40,8 +40,8 @@ public class TaskMonitor {
 		isRunning = true;
 		TaskMonitorThead taskMonitorThead = new TaskMonitorThead();
 		new Thread(taskMonitorThead, "monitor_task-thread").start();
-		UnknowSizeMonitorThread taskUnreplyMonitorThead = new UnknowSizeMonitorThread();
-		new Thread(taskUnreplyMonitorThead, "monitor_task-unreply-thread").start();
+		//UnknowSizeMonitorThread taskUnreplyMonitorThead = new UnknowSizeMonitorThread();
+		//new Thread(taskUnreplyMonitorThead, "monitor_task-unreply-thread").start();
 	}
 	
 	public void destroy(){

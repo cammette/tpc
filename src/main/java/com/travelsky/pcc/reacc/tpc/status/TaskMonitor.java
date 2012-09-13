@@ -34,14 +34,11 @@ public class TaskMonitor {
 	
 	private long interval = 10;
 	
-	private long unReplyInterval = 1000;
 
 	public void init(){
 		isRunning = true;
 		TaskMonitorThead taskMonitorThead = new TaskMonitorThead();
 		new Thread(taskMonitorThead, "monitor_task-thread").start();
-		//UnknowSizeMonitorThread taskUnreplyMonitorThead = new UnknowSizeMonitorThread();
-		//new Thread(taskUnreplyMonitorThead, "monitor_task-unreply-thread").start();
 	}
 	
 	public void destroy(){
@@ -62,21 +59,6 @@ public class TaskMonitor {
 							replyClientService.send(taskResult, taskResult.getBatchNo(),null);
 						}
 					}
-					Thread.sleep(interval);
-				} catch (Throwable e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-	}
-	
-	class UnknowSizeMonitorThread implements Runnable {
-
-		@Override
-		public void run() {
-			while(isRunning){
-				try {
 					List<TaskResult> taskResultsSizeUnkonw = taskContextManager.getUnknowTaskSize() ;
 					Enumeration messageEnum = sendAndReplyClientService.browserQueue();
 					List<TaskResult> temp = new ArrayList<TaskResult>();
@@ -106,16 +88,15 @@ public class TaskMonitor {
 						}
 					}
 					taskContextManager.removeTaskResult(taskResultsSizeUnkonw);
-					Thread.sleep(unReplyInterval);
+					Thread.sleep(interval);
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}
 			}
-
 		}
-
+		
 	}
-
+	
 	public JMSService getReplyClientService() {
 		return replyClientService;
 	}
@@ -137,14 +118,6 @@ public class TaskMonitor {
 
 	public void setTaskContextManager(TaskContextManager taskContextManager) {
 		this.taskContextManager = taskContextManager;
-	}
-
-	public long getUnReplyInterval() {
-		return unReplyInterval;
-	}
-
-	public void setUnReplyInterval(long unReplyInterval) {
-		this.unReplyInterval = unReplyInterval;
 	}
 
 	public JMSService getNotifyClientService() {

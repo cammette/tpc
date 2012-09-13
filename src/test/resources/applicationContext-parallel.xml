@@ -156,7 +156,6 @@
 		<property name="sendAndReplyClientService" ref="sendAndReplyClientService" />
 		<property name="notifyClientService" ref="notifyClientService" />
 		<property name="taskContextManager" ref="taskContextManager" />
-		<property name="unReplyInterval" value="${unreply.montior.interval}"></property>
 		<property name="interval" value="${taskMonitor.interval}"></property>
 	</bean>
 

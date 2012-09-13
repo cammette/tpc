@@ -8,6 +8,7 @@ public class TtestBean {
 	private int sendListsize=3;
 	private int sendSize=5;
 	private boolean isShutdown = false;
+	private boolean isJmx = false;
 	
 	
 	public boolean isRetry() {
@@ -46,4 +47,11 @@ public class TtestBean {
 	public void setShutdown(boolean isShutdown) {
 		this.isShutdown = isShutdown;
 	}
+	public boolean isJmx() {
+		return isJmx;
+	}
+	public void setJmx(boolean isJmx) {
+		this.isJmx = isJmx;
+	}
+	
 }

@@ -1,6 +1,5 @@
 package com.travelsky.pcc.reacc.tpc.status;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -38,10 +37,10 @@ public class TaskMonitor {
 
 	public void init(){
 		isRunning = true;
-		TaskMonitorThead taskMonitorThead = new TaskMonitorThead();
-		new Thread(taskMonitorThead, "monitor_task-thread").start();
-		UnknowSizeMonitorThread taskUnreplyMonitorThead = new UnknowSizeMonitorThread();
-		new Thread(taskUnreplyMonitorThead, "monitor_task-unreply-thread").start();
+//		TaskMonitorThead taskMonitorThead = new TaskMonitorThead();
+//		new Thread(taskMonitorThead, "monitor_task-thread").start();
+		BrowserQueueMonitorThread browserQueueMonitorThread = new BrowserQueueMonitorThread();
+		new Thread(browserQueueMonitorThread, "mbrowserQueueMonitorThread").start();
 	}
 	
 	public void destroy(){
@@ -62,6 +61,7 @@ public class TaskMonitor {
 							replyClientService.send(taskResult, taskResult.getBatchNo(),null);
 						}
 					}
+					
 					Thread.sleep(interval);
 				} catch (Throwable e) {
 					e.printStackTrace();
@@ -71,41 +71,41 @@ public class TaskMonitor {
 		
 	}
 	
-	class UnknowSizeMonitorThread implements Runnable {
+	class BrowserQueueMonitorThread implements Runnable {
 
 		@Override
 		public void run() {
 			while(isRunning){
 				try {
-					List<TaskResult> taskResultsSizeUnkonw = taskContextManager.getUnknowTaskSize() ;
+					List<TaskResult> taskResults = taskContextManager.getAllTask() ;
 					Enumeration messageEnum = sendAndReplyClientService.browserQueue();
-					List<TaskResult> temp = new ArrayList<TaskResult>();
 					String batchNo="";
 					Message message=null;
 			        while (messageEnum.hasMoreElements())
 			         {
-			        	if(taskResultsSizeUnkonw.size()==0){
+			        	if(taskResults.size()==0){
 			        		break;
 			        	}
 			            message = (Message)messageEnum.nextElement();
 			            batchNo=message.getStringProperty(StaticProperties.BATCH_NO);
 			            if(null!=batchNo){
-			            	for (TaskResult taskResult : taskResultsSizeUnkonw) {
+			            	for (TaskResult taskResult : taskResults) {
 								if(batchNo.equals(taskResult.getBatchNo())){
-									temp.add(taskResult);
+									taskResults.remove(taskResult);
+									break;
 								}
 							}
-			            	taskResultsSizeUnkonw.removeAll(temp);
-			            	temp.clear();
 			            }
 			        }
-					if(taskResultsSizeUnkonw.size()>0){
-						for (TaskResult taskResult : taskResultsSizeUnkonw) {
+				//	if(taskResultsSizeUnkonw.size()>0){
+						for (TaskResult taskResult : taskResults) {
+//							taskResult.setEndTime(new Date());
+//							notifyClientService.send(taskResult, taskResult.getBatchNo(),null);
 							taskResult.setEndTime(new Date());
-							notifyClientService.send(taskResult, taskResult.getBatchNo(),null);
+							replyClientService.send(taskResult, taskResult.getBatchNo(),null);
 						}
-					}
-					taskContextManager.removeTaskResult(taskResultsSizeUnkonw);
+					//}
+					taskContextManager.removeTaskResult(taskResults);
 					Thread.sleep(unReplyInterval);
 				} catch (Throwable e) {
 					e.printStackTrace();

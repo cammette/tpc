@@ -146,6 +146,7 @@ public class JMSService {
 			}
 			producer.send(message);
 		} catch (Exception ex) {
+			log.info(msg.toString());
 			log.error("send a message unsuccessfully", ex);
 			throw new AddTaskToQueueException(ex);
 		} finally {
@@ -194,6 +195,7 @@ public class JMSService {
 					.getJmsConnectionSession();
 			Session session = jmsConnectionSession.getSession();
 			browser = session.createBrowser(queue);
+			browser = session.createBrowser(queue, "");
 			return browser.getEnumeration();
 		} catch (Exception e) {
 			try {

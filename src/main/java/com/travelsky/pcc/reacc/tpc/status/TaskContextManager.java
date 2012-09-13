@@ -20,6 +20,8 @@ public interface TaskContextManager {
      * 获取结果为任务大小未知时标识
      */
 	 int GET_TASK_TYPE_UNKNOW = 2;
+	 
+	 int GET_TASK_ALL=3;
 	
 	 void resume();
 	/**
@@ -62,5 +64,7 @@ public interface TaskContextManager {
 	 * @return
 	 */
 	public List<TaskResult> getUnknowTaskSize();
+	
+	public List<TaskResult> getAllTask();
 
 }

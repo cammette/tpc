@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
@@ -48,6 +49,9 @@ public class TravelskyParallelComputerPerson extends
 				if(testBean.isShutdown()){
 					person.setSleep(5000);
 				}
+				if(testBean.isJmx()){
+					person.setSleep(50000);
+				}
 				taskGroup.add(person);
 			}
 			taskGroups.add(taskGroup);
@@ -58,7 +62,7 @@ public class TravelskyParallelComputerPerson extends
 	@Override
 	protected String getTaskBatchNo(TtestBean p) {
 		// TODO Auto-generated method stub
-		return "batchNo:"+new Date().getTime();
+		return "batchNo:"+UUID.randomUUID().toString();
 	}
 
 	@Override

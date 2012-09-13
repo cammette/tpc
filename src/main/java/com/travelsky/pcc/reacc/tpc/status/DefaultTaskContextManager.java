@@ -103,6 +103,9 @@ public class DefaultTaskContextManager implements TaskContextManager {
 						StaticProperties.TASK_SIZE_UNKNOW)) {
 					allBatchBeans.add(allBatchBean);
 				}
+			    break;
+			case (GET_TASK_ALL):
+				allBatchBeans.add(allBatchBean);
 				break;
 			default:
 				break;
@@ -110,6 +113,11 @@ public class DefaultTaskContextManager implements TaskContextManager {
 
 		}
 		return allBatchBeans;
+	}
+
+	@Override
+	public List<TaskResult> getAllTask() {
+		return  getTaskResult(GET_TASK_ALL) ;
 	}
 
 }

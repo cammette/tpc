@@ -66,6 +66,7 @@
 		<property name="concurrentConsumers" value="${executeTaskGroup.threadPool.size}" />
 		<property name="maxConcurrentConsumers" value="${executeTaskGroup.threadPool.size}" />
 	</bean>
+	
 
 	<bean id="taskListenerContainer"
 		class="org.springframework.jms.listener.DefaultMessageListenerContainer">

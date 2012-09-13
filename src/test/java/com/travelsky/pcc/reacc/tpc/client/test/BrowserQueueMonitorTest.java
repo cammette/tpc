@@ -9,7 +9,7 @@ public class BrowserQueueMonitorTest extends TestBase{
 	@Test
 	public void test() {
 		long start = new Date().getTime();
-		for(int i=0;i<3;i++){
+		for(int i=0;i<5;i++){
 			TtestBean bean = new TtestBean();
 //			bean.setSendListsize(10);
 //			bean.setSendSize(50);

@@ -13,7 +13,7 @@ public class BrowserQueueMonitorTest extends TestBase{
 			TtestBean bean = new TtestBean();
 //			bean.setSendListsize(10);
 //			bean.setSendSize(50);
-			requestParallelSync(bean, "asyn normal test ", true);
+			requestParallelSync(bean, "syn normal test ", true);
 		}
 		long end = new Date().getTime();
     	log.info("time :"+(end-start));

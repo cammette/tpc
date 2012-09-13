@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="parallelProperty"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath:parallel.properties" />
+		<property name="systemPropertiesMode" value="2" />
+	</bean>
+
+	<bean id="putConfigToSystemProperty"
+		class="com.travelsky.pcc.reacc.tpc.property.PutConfigToSystemProperty"
+		init-method="putCofingToSystemProperty" depends-on="parallelProperty">
+		  <property name="propertiesMap">
+            <map>
+                <entry key="hornetq.file">
+                    <value>${hornetq.file}</value>
+                </entry>
+                <entry key="retry.times">
+<!--                 retry.times 命名如果改变，得更改StaticProperties里面对应的配置。 -->
+                    <value>${retry.times}</value>
+                </entry>
+                <entry key="retry.delay">
+                    <value>${retry.delay}</value>
+                </entry>
+            </map>
+        </property>
+	</bean>
+
+	<bean id="EmbeddedJms" class="org.hornetq.integration.spring.SpringJmsBootstrap"
+		init-method="start" destroy-method="stop" depends-on="putConfigToSystemProperty">
+		<property name="mbeanServer" ref="mbeanServer"></property>
+	</bean>
+	<bean id="mbeanServer" class="java.lang.management.ManagementFactory"
+		factory-method="getPlatformMBeanServer" />
+
+	
+	
+	<bean id="jmsSendAndReplyClientConnectionPool" class="com.travelsky.pcc.reacc.tpc.jms.JmsConnectionPool"
+		depends-on="EmbeddedJms" init-method="init" destroy-method="destroy">
+		<property name="connectionFactory" ref="ConnectionFactory"></property>
+		<property name="maxConnection" value="${send.parellel.size}"></property>
+	</bean>
+
+	<bean id="jmsClientNotifyConnectionPool" class="com.travelsky.pcc.reacc.tpc.jms.JmsConnectionPool"
+		depends-on="EmbeddedJms" init-method="init" destroy-method="destroy">
+		<property name="connectionFactory" ref="ConnectionFactory"></property>
+		<property name="maxConnection" value="${reply.parallel.size}"></property>
+	</bean>
+	
+	<bean id="jmsGroupConnectionPool" class="com.travelsky.pcc.reacc.tpc.jms.JmsConnectionPool"
+		depends-on="EmbeddedJms" init-method="init" destroy-method="destroy">
+		<property name="connectionFactory" ref="ConnectionFactory"></property>
+		<property name="maxConnection" value="${jmsGroupConnectionPool.size}"></property>
+	</bean>
+	
+	<bean id="jmsGroupReplyConnectionPool" class="com.travelsky.pcc.reacc.tpc.jms.JmsConnectionPool"
+		depends-on="EmbeddedJms" init-method="init" destroy-method="destroy">
+		<property name="connectionFactory" ref="ConnectionFactory"></property>
+		<property name="maxConnection" value="${jmsGroupReplyConnectionPool.size}"></property>
+	</bean>
+	
+  
+
+	<bean id="testService" class="com.travelsky.pcc.reacc.tpc.jms.JMSService" depends-on="EmbeddedJms">
+	<property name="queue" ref="/queue/test" />
+		<property name="replyQueue" ref="/queue/test" />
+		<property name="jmsConnectionPool" ref="jmsSendAndReplyClientConnectionPool" />
+		<property name="replyJmsConnectionPool" ref="jmsClientNotifyConnectionPool" />
+	</bean>
+</beans>
+    

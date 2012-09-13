@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.junit.Test;
 
-public class TwoMethodTest extends TestBase{
+public class BrowserQueueMonitorTest extends TestBase{
 
 	@Test
 	public void test() {

@@ -77,6 +77,7 @@ public class TravelskyParallelComputerPerson extends
 		log.info(Thread.currentThread().getName()+":doTaskUnit--"+person.getId()+"sleep:"+person.getSleep());
 		try {
 			Thread.sleep(person.getSleep());
+			log.info(Thread.currentThread().getName()+":doTaskUnit--"+person.getId()+"after----sleep:"+person.getSleep());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

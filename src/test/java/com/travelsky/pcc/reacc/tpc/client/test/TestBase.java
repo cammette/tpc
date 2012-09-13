@@ -30,6 +30,7 @@ public class TestBase {
 					log.info("time spend:"
 							+ (taskResult.getEndTime().getTime() - taskResult
 									.getStartTime().getTime()) + "ms");
+					log.info("taskUnitSize:::"+taskResult.getTaskUnitResults().size());
 				}
 			} else {
 				travelskyParallelComputerInterface.excuteAsyn(bean);

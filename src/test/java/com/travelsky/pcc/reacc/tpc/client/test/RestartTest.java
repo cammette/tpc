@@ -1,10 +1,17 @@
 package com.travelsky.pcc.reacc.tpc.client.test;
 
+import java.util.Enumeration;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputingInterface;
+import com.travelsky.pcc.reacc.tpc.jms.JMSService;
+import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 
 /**
  * 测试重启，任务更改为，sleep(5000),即睡眠5秒,先运行测试 testShutdown(),
@@ -17,8 +24,8 @@ import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputingInterface;
 public class RestartTest extends TestBase{
 	@Autowired
 	private TravelskyParallelComputingInterface<Object> travelskyParallelComputerInterface;
-
-
+	@Autowired
+	private JMSService sendAndReplyClientService;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -42,9 +49,18 @@ public class RestartTest extends TestBase{
 			e.printStackTrace();
 		}
 	}
-	
+	@Test
 	public void testBrowse(){
-		
+		Enumeration enu=sendAndReplyClientService.browserQueue();
+		while(enu.hasMoreElements()){
+			Message msg = (Message) enu.nextElement();
+			try {
+				log.info(msg.getStringProperty(StaticProperties.BATCH_NO));
+			} catch (JMSException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 

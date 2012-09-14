@@ -38,9 +38,9 @@ public class TestBrowserMessage {
     List<TaskGroup<Person>> taskGroups = new ArrayList<TaskGroup<Person>>();
     TaskGroup<Person> taskGroup = new TaskGroup<Person>();
     Person person = null;
-    for (int j = 0; j < 10; j++) {
+    for (int j = 0; j < 100; j++) {
       taskGroup = new TaskGroup<Person>();
-      for (int i = 0; i < 20; i++) {
+      for (int i = 0; i < 200; i++) {
           person = new Person();
           person.setId("j= "+j+" i= "+i + "");
           person.setName("name插入数据" + i+":"+j);
@@ -111,7 +111,7 @@ public class TestBrowserMessage {
     ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-messagetest.xml");
     final JMSService testService = (JMSService) context
         .getBean("testService");
-    String batchNo = "batchNo:1347523961070__10";
+    String batchNo = "batchNo:1347593469401__98";
     long start = System.currentTimeMillis();
     System.out.println("开始时间："+start);
     boolean result = testService.hasMessage(batchNo);
@@ -128,21 +128,19 @@ public class TestBrowserMessage {
     ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-messagetest.xml");
     final JMSService testService = (JMSService) context
         .getBean("testService");
+    String batch = "batchNo:1347593469401__98";
     System.out.println("browserQueue测试：：：：：：：");
     long a = System.currentTimeMillis();
     System.out.println("开始时间："+a);
-    Enumeration enumeration = testService.browserQueue();
-    System.out.println(enumeration.hasMoreElements());
-      while (enumeration.hasMoreElements())
-      {
-         Message p = (Message)enumeration.nextElement();
-         System.out.println(p.toString());
-         if(p.getStringProperty(StaticProperties.BATCH_NO).equals("batchNo:1347523961070__10")){
-           long end = System.currentTimeMillis()-a;
-           System.out.println("browserQueue耗时："+end);
-           System.out.println(p.getObjectProperty(Person.class.getName()));
-           return ;
-         }
-     }
+    List<String> batchNoLists = testService.browserQueue();
+    for(String batchNO : batchNoLists){
+      if(batchNO.equals(batch)){
+        long b = System.currentTimeMillis();
+        long cost = b-a;
+        System.out.println("结束时间："+b);
+        System.out.println("用时："+cost);
+        break ;
+      }
+    }
     }
 }

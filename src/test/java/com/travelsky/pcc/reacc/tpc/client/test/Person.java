@@ -18,7 +18,7 @@ public class Person implements java.io.Serializable{
 	/**
 	 * 默认任务执行sleep，测试重启时sleep可以设置长一点
 	 */
-	private long sleep=1000;
+	private long sleep=100;
 	public String getName() {
 		return name;
 	}

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.Logger;
+
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
@@ -17,7 +19,7 @@ import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
  * 
  */
 public class DefaultTaskContextManager implements TaskContextManager {
-
+	private Logger log = Logger.getLogger(getClass());
 	private ConcurrentHashMap<String, TaskResult> taskResultMap = new ConcurrentHashMap<String, TaskResult>();
 
 	public void init() {
@@ -77,6 +79,7 @@ public class DefaultTaskContextManager implements TaskContextManager {
 		allBatchBean.setStartTime(new Date());
 		allBatchBean.setAsyn(asyn);
 		allBatchBean.setBeanName(beanName);
+		log.info("add taskResult:"+allBatchBean.getBatchNo());
 		taskResultMap.put(batchNo, allBatchBean);
 
 	}

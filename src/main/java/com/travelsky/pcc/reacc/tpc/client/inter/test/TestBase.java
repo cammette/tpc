@@ -28,10 +28,15 @@ public class TestBase {
 			if (isSyn) {
 				taskResult = travelskyParallelComputerInterface.excuteSyn(bean,
 						500000);
+				log.info("ddddddddddddddddddddffffffffffffffffff");
 				if (null != taskResult) {
+					log.info("dddddddddddddddddddd");
 					log.info("time spend:"
 							+ (taskResult.getEndTime().getTime() - taskResult
 									.getStartTime().getTime()) + "ms");
+				}
+				else{
+					log.info("taskResult is null!!!!!!!!!!!!!!!!!!!!11");
 				}
 			} else {
 				travelskyParallelComputerInterface.excuteAsyn(bean);

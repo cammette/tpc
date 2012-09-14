@@ -44,8 +44,7 @@ public class TaskParallelClient implements TaskParallelClientInterface<Object> {
 		for (Object task : tasks) {
 		    i++;
 		    batchNo = batchNo+"_"+i;
-		    messageProperties.put(ClientMessage.HDR_DUPLICATE_DETECTION_ID.toString(), batchNo); 
-			sendAndReplyClientService.send((Serializable) task, batchNo,messageProperties);
+			 sendAndReplyClientService.send((Serializable) task, batchNo,messageProperties);
 		}
 		ObjectMessage msg = (ObjectMessage)sendAndReplyClientService.waitforReply(batchNo, excuteTimeout);
 		try {

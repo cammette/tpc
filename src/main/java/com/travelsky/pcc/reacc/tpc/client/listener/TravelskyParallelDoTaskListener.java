@@ -13,7 +13,6 @@ import javax.jms.TextMessage;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.log4j.Logger;
 import org.hornetq.jms.client.HornetQObjectMessage;
-import org.hornetq.api.core.client.ClientMessage;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -22,6 +21,7 @@ import com.travelsky.pcc.reacc.tpc.AbstractTaskListener;
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedException;
 import com.travelsky.pcc.reacc.tpc.exception.TpcRetryException;
+import com.travelsky.pcc.reacc.tpc.jms.DuplicateMessageManger;
 import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 
 /**
@@ -37,8 +37,6 @@ public class TravelskyParallelDoTaskListener extends AbstractTaskListener implem
 	private ApplicationContext springContext;
 	
 	private final static String doJoinTaskMethodName = "doTaskUnit";
-	
-	
 	
 	@Override
 	@SuppressWarnings("unchecked")

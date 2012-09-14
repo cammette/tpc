@@ -7,6 +7,7 @@ import javax.jms.MessageListener;
 import org.apache.log4j.Logger;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
+import com.travelsky.pcc.reacc.tpc.jms.DuplicateMessageManger;
 import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
 import com.travelsky.pcc.reacc.tpc.status.TaskContextManager;
 /**
@@ -19,6 +20,8 @@ public abstract class AbstractTaskListener implements MessageListener {
 	private Logger log = Logger.getLogger(getClass());
 
 	private TaskContextManager taskContextManager;
+	
+	private DuplicateMessageManger duplicateMessageManager;
 	
 	public TaskContextManager getTaskContextManager() {
 		return taskContextManager;
@@ -36,9 +39,21 @@ public abstract class AbstractTaskListener implements MessageListener {
 				throw new IllegalArgumentException(
 						"the message must include the batch_no property");
 			}
-			TaskUnitResult taskUnitResult = this.doMessage(msg, batchNo);
 			String springBeanName = msg.getStringProperty(StaticProperties.ParallelComputerSpringBean);
-			taskContextManager.addTaskUnitResult(taskUnitResult,springBeanName);
+			if(duplicateMessageManager.contains(batchNo)){
+				log.info("exist batchNo:"+batchNo);
+				TaskUnitResult taskUnitResult = new TaskUnitResult();
+				taskUnitResult.setBatchNo(batchNo);
+				taskUnitResult.setIsSuccess(false);
+				taskUnitResult.setMsg("also done");
+				taskContextManager.addTaskUnitResult(taskUnitResult,springBeanName);
+			}else{
+				log.info("add to cache:"+batchNo);
+				TaskUnitResult taskUnitResult = this.doMessage(msg, batchNo);
+				taskContextManager.addTaskUnitResult(taskUnitResult,springBeanName);
+				duplicateMessageManager.addToCache(batchNo);
+			}
+			
 		} catch (Throwable e) {
 			log.error("task do message error : ", e);
 			if (e instanceof RuntimeException) {
@@ -58,5 +73,14 @@ public abstract class AbstractTaskListener implements MessageListener {
 	 */
 	protected abstract TaskUnitResult doMessage(Message msg, String batchNo)
 			throws JMSException;
+
+	public DuplicateMessageManger getDuplicateMessageManager() {
+		return duplicateMessageManager;
+	}
+
+	public void setDuplicateMessageManager(
+			DuplicateMessageManger duplicateMessageManager) {
+		this.duplicateMessageManager = duplicateMessageManager;
+	}
 
 }

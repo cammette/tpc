@@ -13,20 +13,20 @@
 	<bean id="putConfigToSystemProperty"
 		class="com.travelsky.pcc.reacc.tpc.property.PutConfigToSystemProperty"
 		init-method="putCofingToSystemProperty" depends-on="parallelProperty">
-		  <property name="propertiesMap">
-            <map>
-                <entry key="hornetq.file">
-                    <value>${hornetq.file}</value>
-                </entry>
-                <entry key="retry.times">
-<!--                 retry.times 命名如果改变，得更改StaticProperties里面对应的配置。 -->
-                    <value>${retry.times}</value>
-                </entry>
-                <entry key="retry.delay">
-                    <value>${retry.delay}</value>
-                </entry>
-            </map>
-        </property>
+		<property name="propertiesMap">
+			<map>
+				<entry key="hornetq.file">
+					<value>${hornetq.file}</value>
+				</entry>
+				<entry key="retry.times">
+					<!-- retry.times 命名如果改变，得更改StaticProperties里面对应的配置。 -->
+					<value>${retry.times}</value>
+				</entry>
+				<entry key="retry.delay">
+					<value>${retry.delay}</value>
+				</entry>
+			</map>
+		</property>
 	</bean>
 
 	<bean id="EmbeddedJms" class="org.hornetq.integration.spring.SpringJmsBootstrap"
@@ -39,6 +39,7 @@
 	<bean abstract="true" id="abstractTaskListener"
 		class="com.travelsky.pcc.reacc.tpc.AbstractTaskListener">
 		<property name="taskContextManager" ref="taskContextManager"></property>
+		<property name="duplicateMessageManager" ref="duplicateMessageManager"></property>
 	</bean>
 
 	<bean id="taskListener"
@@ -49,20 +50,19 @@
 	<bean id="clientNotify"
 		class="com.travelsky.pcc.reacc.tpc.client.listener.TravelskyParallelJoinListener">
 	</bean>
-	
-	<bean id="groupListener"
-		class="com.travelsky.pcc.reacc.tpc.TaskGroupListener">
+
+	<bean id="groupListener" class="com.travelsky.pcc.reacc.tpc.TaskGroupListener">
 		<property name="notifyClientService" ref="notifyClientService" />
 		<property name="replyGroupService" ref="replyGroupService" />
 		<property name="taskParallelClientInterface" ref="taskParallelClientInterface" />
 	</bean>
-	
+
 	<bean id="groupListenerContainer"
 		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
 		<property name="connectionFactory" ref="ConnectionFactory" />
 		<property name="destination" ref="/queue/taskGroupQueue" />
 		<property name="messageListener" ref="groupListener" />
-		<property name="sessionTransacted" value="false"></property>
+		<property name="sessionTransacted" value="true"></property>
 		<property name="concurrentConsumers" value="${executeTaskGroup.threadPool.size}" />
 		<property name="maxConcurrentConsumers" value="${executeTaskGroup.threadPool.size}" />
 	</bean>
@@ -86,7 +86,7 @@
 		<property name="concurrentConsumers" value="${asyNotify.threadPool.size}" />
 		<property name="maxConcurrentConsumers" value="${asyNotify.threadPool.size}" />
 	</bean>
-	
+
 	<bean id="jmsSendAndReplyClientConnectionPool" class="com.travelsky.pcc.reacc.tpc.jms.JmsConnectionPool"
 		depends-on="EmbeddedJms" init-method="init" destroy-method="destroy">
 		<property name="connectionFactory" ref="ConnectionFactory"></property>
@@ -98,20 +98,20 @@
 		<property name="connectionFactory" ref="ConnectionFactory"></property>
 		<property name="maxConnection" value="${reply.parallel.size}"></property>
 	</bean>
-	
+
 	<bean id="jmsGroupConnectionPool" class="com.travelsky.pcc.reacc.tpc.jms.JmsConnectionPool"
 		depends-on="EmbeddedJms" init-method="init" destroy-method="destroy">
 		<property name="connectionFactory" ref="ConnectionFactory"></property>
 		<property name="maxConnection" value="${jmsGroupConnectionPool.size}"></property>
 	</bean>
-	
+
 	<bean id="jmsGroupReplyConnectionPool" class="com.travelsky.pcc.reacc.tpc.jms.JmsConnectionPool"
 		depends-on="EmbeddedJms" init-method="init" destroy-method="destroy">
 		<property name="connectionFactory" ref="ConnectionFactory"></property>
 		<property name="maxConnection" value="${jmsGroupReplyConnectionPool.size}"></property>
 	</bean>
-	
-   <bean id="sendAndReplyClientService" class="com.travelsky.pcc.reacc.tpc.jms.JMSService"
+
+	<bean id="sendAndReplyClientService" class="com.travelsky.pcc.reacc.tpc.jms.JMSService"
 		depends-on="EmbeddedJms">
 		<property name="queue" ref="/queue/taskUnitQueue" />
 		<property name="replyQueue" ref="/queue/taskUnitReplyQueue" />
@@ -130,13 +130,13 @@
 		<property name="queue" ref="/queue/taskUnitReplyQueue" />
 		<property name="jmsConnectionPool" ref="jmsSendAndReplyClientConnectionPool" />
 	</bean>
-	
+
 	<bean id="replyGroupService" class="com.travelsky.pcc.reacc.tpc.jms.JMSService"
 		depends-on="EmbeddedJms">
 		<property name="queue" ref="/queue/taskGroupReplyQueue" />
 		<property name="jmsConnectionPool" ref="jmsGroupReplyConnectionPool" />
 	</bean>
-	
+
 	<bean id="sendAndReplyGroupService" class="com.travelsky.pcc.reacc.tpc.jms.JMSService"
 		depends-on="EmbeddedJms">
 		<property name="queue" ref="/queue/taskGroupQueue" />
@@ -144,17 +144,18 @@
 		<property name="jmsConnectionPool" ref="jmsGroupConnectionPool" />
 		<property name="replyJmsConnectionPool" ref="jmsGroupReplyConnectionPool" />
 	</bean>
-	
+
 	<bean id="taskContextManager"
 		class="com.travelsky.pcc.reacc.tpc.status.DefaultTaskContextManager"
 		init-method="init">
 	</bean>
 
-   <bean id="duplicateMessageManager" class="com.travelsky.pcc.reacc.tpc.jms.DuplicateMessageManger" init-method="init">
+	<bean id="duplicateMessageManager" class="com.travelsky.pcc.reacc.tpc.jms.DuplicateMessageManger"
+		init-method="init">
 		<property name="queue" ref="/queue/taskUnitQueue" />
 		<property name="embeddedJMS" ref="EmbeddedJms" />
 	</bean>
-   
+
 	<bean id="MonitorBatchTask" class="com.travelsky.pcc.reacc.tpc.status.TaskMonitor"
 		init-method="init" destroy-method="destroy" depends-on="taskContextManager">
 		<property name="replyClientService" ref="replyClientService" />
@@ -169,16 +170,17 @@
 		<property name="sendAndReplyClientService" ref="sendAndReplyClientService" />
 		<property name="taskContextManager" ref="taskContextManager" />
 	</bean>
-	
-	<bean id="taskGroupParallelClientInterface" class="com.travelsky.pcc.reacc.tpc.client.TaskGroupParallelClient">
+
+	<bean id="taskGroupParallelClientInterface"
+		class="com.travelsky.pcc.reacc.tpc.client.TaskGroupParallelClient">
 		<property name="sendAndReplyGroupService" ref="sendAndReplyGroupService" />
 	</bean>
-	
-	<bean id="travelskyParallelComputingTemplate"
-		class="com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputingTemplate" abstract="true">
-		<property name="taskGroupParallelClientInterface" ref="taskGroupParallelClientInterface"/>
-	</bean>
 
+	<bean id="travelskyParallelComputingTemplate"
+		class="com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputingTemplate"
+		abstract="true">
+		<property name="taskGroupParallelClientInterface" ref="taskGroupParallelClientInterface" />
+	</bean>
 
 </beans>
     

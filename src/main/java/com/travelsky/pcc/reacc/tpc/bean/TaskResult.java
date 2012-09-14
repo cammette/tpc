@@ -108,6 +108,7 @@ public class TaskResult implements Serializable {
 	public synchronized void increateSuccessfulCount() {
 		successfulcount++;
 	}
+	
 
 	public synchronized void increateFailureCount() {
 		failureCount++;
@@ -144,9 +145,6 @@ public class TaskResult implements Serializable {
 	}
 
 	public boolean isDone() {
-		if(totalCount==StaticProperties.TASK_SIZE_UNKNOW){
-			return false;
-		}
 		if ((failureCount + successfulcount) >= totalCount) {
 			return true;
 		}

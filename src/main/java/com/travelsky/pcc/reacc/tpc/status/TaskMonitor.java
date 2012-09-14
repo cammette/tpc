@@ -58,6 +58,7 @@ public class TaskMonitor {
 						for (TaskResult taskResult : taskResults) {
 							taskResult.setEndTime(new Date());
 							replyClientService.send(taskResult, taskResult.getBatchNo(),null);
+							log.info("replyClient  call");
 						}
 					}
 					Thread.sleep(interval);

@@ -9,15 +9,16 @@ public class BrowserQueueMonitorTest extends TestBase{
 	@Test
 	public void test() {
 		long start = new Date().getTime();
-		for(int i=0;i<3;i++){
+
+		for(int i=0;i<5;i++){
 			TtestBean bean = new TtestBean();
-			bean.setShutdown(true);
 //			bean.setSendListsize(10);
 //			bean.setSendSize(50);
 			requestParallelSync(bean, "syn normal test ", true);
 		}
 		long end = new Date().getTime();
-    	log.info("time :"+(end-start));
+		log.info("time :"+(end-start));
+		///27s
 //			try {
 //				Thread.sleep(50000);
 //			} catch (InterruptedException e) {

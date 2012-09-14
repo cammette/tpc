@@ -73,7 +73,8 @@ public class TravelskyParallelComputerPerson extends
 			//异常测试
 			throw new TpcRetryException("retry exception test");
 		}
-		returnBean.setResult(person.getName()+" doTaskUnit");
+
+		returnBean.setResult(person.getName()+" doTaskUnit sleep:"+person.getSleep());
 		log.info(Thread.currentThread().getName()+":doTaskUnit--"+person.getId()+"sleep:"+person.getSleep());
 		try {
 			Thread.sleep(person.getSleep());

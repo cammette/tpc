@@ -173,20 +173,21 @@ public class JMSService {
      * 获取queue队列的消息列表
      * @return
      */
-	public Enumeration browserQueue() {
-		return browse(queue);
+	public boolean hasMessage(String batchNo){
+		return browse(queue,batchNo);
 	}
 	/**
      * 获取replyQueue队列的消息列表
      * @return
      */
-	public Enumeration browserReplyQueue() {
-		return browse(replyQueue);
+	public boolean hasMessageOfReplyQueue(String batchNo) {
+		return browse(replyQueue , batchNo);
 	}
 
-	private Enumeration browse(Queue queue) {
+	private boolean browse(Queue queue,String batchNo) {
+	    boolean flag = false ;
 		if(null==queue){
-			return null;
+			return flag;
 		}
 		JmsConnectionSession jmsConnectionSession = null;
 		QueueBrowser browser = null;
@@ -194,8 +195,10 @@ public class JMSService {
 			jmsConnectionSession = (JmsConnectionSession) jmsConnectionPool
 					.getJmsConnectionSession();
 			Session session = jmsConnectionSession.getSession();
-			browser = session.createBrowser(queue);
-			return browser.getEnumeration();
+			String messageSelector = StaticProperties.BATCH_NO+"='"+batchNo+"'";
+			browser = session.createBrowser(queue, messageSelector);
+			Enumeration msg = browser.getEnumeration();
+			flag = msg.hasMoreElements();
 		} catch (Exception e) {
 			try {
 				log.error("browse fail:queue name:" + queue.getQueueName(), e);
@@ -223,7 +226,64 @@ public class JMSService {
 				}
 			}
 		}
-		return null;
+		return flag;
 	}
 
+	
+	/**
+     * 获取queue队列的消息列表
+     * @return
+     */
+    public Enumeration browserQueue() {
+        return browse(queue);
+    }
+    /**
+     * 获取replyQueue队列的消息列表
+     * @return
+     */
+    public Enumeration browserReplyQueue() {
+        return browse(replyQueue);
+    }
+
+    private Enumeration browse(Queue queue) {
+        if(null==queue){
+            return null;
+        }
+        JmsConnectionSession jmsConnectionSession = null;
+        QueueBrowser browser = null;
+        try {
+            jmsConnectionSession = (JmsConnectionSession) jmsConnectionPool
+                    .getJmsConnectionSession();
+            Session session = jmsConnectionSession.getSession();
+            browser = session.createBrowser(queue);
+            return browser.getEnumeration();
+        } catch (Exception e) {
+            try {
+                log.error("browse fail:queue name:" + queue.getQueueName(), e);
+            } catch (JMSException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally {
+            if(null!=browser){
+                try {
+                    browser.close();
+                } catch (JMSException e) {
+                    log.error("close browse unsuccessfully",e);
+                }
+            }
+            if (jmsConnectionSession != null) {
+                try {
+                    jmsConnectionPool
+                            .returnJmsConnectionSession(jmsConnectionSession);
+                } catch (Exception e) {
+                    log.error(
+                            "put the jmsConnectionSession to back the pool unsuccessfully",
+                            e);
+                }
+            }
+        }
+        return null;
+    }
 }

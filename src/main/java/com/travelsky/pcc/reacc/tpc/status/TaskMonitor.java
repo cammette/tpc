@@ -81,8 +81,7 @@ public class TaskMonitor {
 		public void run() {
 			while (isRunning) {
 				try {
-					List<TaskResult> taskResults = taskContextManager
-							.getAllTask();
+					List<TaskResult> taskResults = taskContextManager.getTagZeroTask();
                     String batchNo = "";
 					for (TaskResult taskResult : taskResults) {
 						if (sendAndReplyClientService.hasMessage(batchNo)) {

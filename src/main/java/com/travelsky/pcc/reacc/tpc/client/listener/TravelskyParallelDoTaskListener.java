@@ -23,6 +23,7 @@ import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedException;
 import com.travelsky.pcc.reacc.tpc.exception.TpcRetryException;
 import com.travelsky.pcc.reacc.tpc.property.StaticProperties;
+import com.travelsky.pcc.reacc.tpc.status.TaskContextManager;
 
 /**
  * 实现了任务单元执行的逻辑：
@@ -37,8 +38,6 @@ public class TravelskyParallelDoTaskListener extends AbstractTaskListener implem
 	private ApplicationContext springContext;
 	
 	private final static String doJoinTaskMethodName = "doTaskUnit";
-	
-	
 	
 	@Override
 	@SuppressWarnings("unchecked")
@@ -101,5 +100,6 @@ public class TravelskyParallelDoTaskListener extends AbstractTaskListener implem
 			throws BeansException {
 		springContext = appConext;
 	}
+	
 
 }

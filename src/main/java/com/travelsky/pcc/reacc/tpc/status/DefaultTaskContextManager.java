@@ -91,22 +91,34 @@ public class DefaultTaskContextManager implements TaskContextManager {
 		String[] keyArray = keys.toArray(new String[] {});// 目的为了解决遍历该集合时，allBatchBeanMap有添加key的情况。
 		List<TaskResult> allBatchBeans = new ArrayList<TaskResult>();
 		for (String key : keyArray) {
-			TaskResult allBatchBean = taskResultMap.get(key);
+			TaskResult taskResult = taskResultMap.get(key);
 			switch (type) {
 			case (GET_TASK_TYPE_DONE):
-				if (allBatchBean.isDone()) {
-					allBatchBeans.add(allBatchBean);
+				if (taskResult.isDone()) {
+					allBatchBeans.add(taskResult);
 				}
 				break;
 			case (GET_TASK_TYPE_UNKNOW):
-				if (allBatchBean.getTotalCount().equals(
+				if (taskResult.getTotalCount().equals(
 						StaticProperties.TASK_SIZE_UNKNOW)) {
-					allBatchBeans.add(allBatchBean);
+					allBatchBeans.add(taskResult);
 				}
 			    break;
 			case (GET_TASK_ALL):
-				allBatchBeans.add(allBatchBean);
+				allBatchBeans.add(taskResult);
 				break;
+			case (GET_SEND_FINISH):
+				if(taskResult.isSendFinish()){
+					allBatchBeans.add(taskResult);
+					System.out.println(" send fish:"+taskResult.isSendFinish());
+				}
+			break;
+			case (GET_TAG_ZERO):
+				if(taskResult.getTag()==0){
+					allBatchBeans.add(taskResult);
+					System.out.println(" tag is zero:"+taskResult.isSendFinish());
+				}
+			break;
 			default:
 				break;
 			}
@@ -116,8 +128,37 @@ public class DefaultTaskContextManager implements TaskContextManager {
 	}
 
 	@Override
-	public List<TaskResult> getAllTask() {
-		return  getTaskResult(GET_TASK_ALL) ;
+	public List<TaskResult> getSednFinishTask() {
+		return  getTaskResult(GET_SEND_FINISH) ;
+	}
+
+	@Override
+	public void changeFinishByBatchNo(String batchNo) {
+		TaskResult sendFinishTask = taskResultMap.get(batchNo);
+		if(null!=sendFinishTask){
+			sendFinishTask.setSendFinish(true);
+		}
+	}
+
+	@Override
+	public void incTag(String batchNo) {
+		TaskResult taskResult = taskResultMap.get(batchNo);
+		if(null!=taskResult){
+			taskResult.incTag();
+		}
+	}
+
+	@Override
+	public void decTag(String batchNo) {
+		TaskResult taskResult = taskResultMap.get(batchNo);
+		if(null!=taskResult){
+			taskResult.decTag();
+		}
+	}
+
+	@Override
+	public List<TaskResult> getTagZeroTask() {
+		return  getTaskResult(GET_TAG_ZERO) ;
 	}
 
 }

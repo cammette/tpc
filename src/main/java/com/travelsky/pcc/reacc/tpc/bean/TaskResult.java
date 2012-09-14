@@ -61,6 +61,9 @@ public class TaskResult implements Serializable {
 	 */
 	private boolean asyn = true;
 	
+	private boolean isSendFinish = false;
+	
+	private int tag=0;
 	public String getBeanName() {
 		return beanName;
 	}
@@ -159,6 +162,30 @@ public class TaskResult implements Serializable {
 
 	public void setAsyn(boolean asyn) {
 		this.asyn = asyn;
+	}
+
+	public boolean isSendFinish() {
+		return isSendFinish;
+	}
+
+	public void setSendFinish(boolean isSendFinish) {
+		this.isSendFinish = isSendFinish;
+	}
+	
+	public void incTag(){
+		tag++;
+	}
+	public void decTag(){
+		tag--;
+	}
+	
+
+	public int getTag() {
+		return tag;
+	}
+
+	public void setTag(int tag) {
+		this.tag = tag;
 	}
 
 	@Override

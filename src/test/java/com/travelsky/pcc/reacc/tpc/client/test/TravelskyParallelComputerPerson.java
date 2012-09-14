@@ -92,6 +92,7 @@ public class TravelskyParallelComputerPerson extends
 			log.info("join: task restart ok:-------------");
 		}
 		log.info("join "+taskResult.toString());
+		log.info("unint size:"+taskResult.getTaskUnitResults().size());
 		for(TaskUnitResult unit : taskResult.getTaskUnitResults()){
 			if(""!=unit.getMsg()){
 				log.info(unit.getMsg());

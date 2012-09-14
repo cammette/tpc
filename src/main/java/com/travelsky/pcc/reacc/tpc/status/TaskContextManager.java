@@ -22,6 +22,10 @@ public interface TaskContextManager {
 	 int GET_TASK_TYPE_UNKNOW = 2;
 	 
 	 int GET_TASK_ALL=3;
+	 
+	 int GET_SEND_FINISH = 4;
+	 
+	 int GET_TAG_ZERO=5;
 	
 	 void resume();
 	/**
@@ -65,6 +69,15 @@ public interface TaskContextManager {
 	 */
 	public List<TaskResult> getUnknowTaskSize();
 	
-	public List<TaskResult> getAllTask();
+	public List<TaskResult> getSednFinishTask();
+	
+	public List<TaskResult> getTagZeroTask();
+	
+	public void changeFinishByBatchNo(String batchNo);
+	
+	public void incTag(String batchNo);
+	
+	public void decTag(String batchNo);
+	
 
 }

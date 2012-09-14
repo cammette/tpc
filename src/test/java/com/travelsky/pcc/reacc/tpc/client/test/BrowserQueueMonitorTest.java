@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import com.travelsky.pcc.reacc.tpc.client.inter.test.TestBase;
+
 public class BrowserQueueMonitorTest extends TestBase{
 
 	@Test

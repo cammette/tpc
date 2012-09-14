@@ -1,4 +1,4 @@
-package com.travelsky.pcc.reacc.tpc.client.test;
+package com.travelsky.pcc.reacc.tpc.client.inter.test;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,16 +25,14 @@ public class RestartTest extends TestBase{
 
 	@Test
 	public void testShutdown() {
-		TtestBean bean = new TtestBean();
-		bean.setShutdown(true);
-		requestParallelSync(bean, "syn showndown test ", true);
+		testBaseP.setShutdown(true);
+		requestParallelSync(testBaseP, "syn showndown test ", true);
 	}
 	
 	@Test
 	public void testAfterShutdown() {
-		TtestBean bean = new TtestBean();
-		bean.setNull(true);
-		requestParallelSync(bean, "syn after showndown test ", true);
+		testBaseP.setNull(true);
+		requestParallelSync(testBaseP, "syn after showndown test ", true);
 		try {
 			Thread.sleep(50000);
 		} catch (InterruptedException e) {
@@ -43,9 +41,4 @@ public class RestartTest extends TestBase{
 		}
 	}
 	
-	public void testBrowse(){
-		
-	}
-	
-
 }

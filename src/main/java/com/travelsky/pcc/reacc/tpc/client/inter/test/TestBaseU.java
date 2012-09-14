@@ -1,8 +1,6 @@
-package com.travelsky.pcc.reacc.tpc.client.test;
+package com.travelsky.pcc.reacc.tpc.client.inter.test;
 
-import com.travelsky.pcc.reacc.tpc.client.inter.test.TestBaseU;
-
-public class ReturnBean extends TestBaseU implements java.io.Serializable{
+public class TestBaseU implements java.io.Serializable{
 
 	/**
 	 * 
@@ -10,17 +8,17 @@ public class ReturnBean extends TestBaseU implements java.io.Serializable{
 	private static final long serialVersionUID = -6520906631405535182L;
 	
 	String id ;
-	String result;
+	Object result;
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getResult() {
+	public Object getResult() {
 		return result;
 	}
-	public void setResult(String result) {
+	public void setResult(Object result) {
 		this.result = result;
 	}
 	public String toString(){

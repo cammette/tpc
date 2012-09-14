@@ -150,6 +150,11 @@
 		init-method="init">
 	</bean>
 
+   <bean id="duplicateMessageManager" class="com.travelsky.pcc.reacc.tpc.jms.DuplicateMessageManger" init-method="init">
+		<property name="queue" ref="/queue/taskUnitQueue" />
+		<property name="embeddedJMS" ref="EmbeddedJms" />
+	</bean>
+   
 	<bean id="MonitorBatchTask" class="com.travelsky.pcc.reacc.tpc.status.TaskMonitor"
 		init-method="init" destroy-method="destroy" depends-on="taskContextManager">
 		<property name="replyClientService" ref="replyClientService" />

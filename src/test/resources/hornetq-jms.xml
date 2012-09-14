@@ -18,10 +18,12 @@
 	<!--the queue used by the example -->
 	<queue name="taskUnitQueue">
 		<entry name="/queue/taskUnitQueue" />
+		<durable>false</durable>
 	</queue>
 	
 	<queue name="taskUnitReplyQueue">
 		<entry name="/queue/taskUnitReplyQueue" />
+		<durable>false</durable>
 	</queue>
 	
     <queue name="taskNotifyQueue">

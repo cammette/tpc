@@ -1,4 +1,4 @@
-package com.travelsky.pcc.reacc.tpc.client.test;
+package com.travelsky.pcc.reacc.tpc.client.inter.test;
 
 import java.util.List;
 
@@ -13,13 +13,15 @@ import com.travelsky.pcc.reacc.tpc.bean.TaskUnitResult;
 import com.travelsky.pcc.reacc.tpc.client.TravelskyParallelComputingInterface;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "/person-test.xml" })
+@ContextConfiguration({ "/parallel-test.xml" })
 public class TestBase {
 	public Logger log = Logger.getLogger(getClass());
 	@Autowired
 	public TravelskyParallelComputingInterface<Object> travelskyParallelComputerInterface;
-
-	public void requestParallelSync(TtestBean bean, String title, boolean isSyn) {
+	@Autowired
+	public TestBaseP testBaseP;
+	
+	public void requestParallelSync(TestBaseP bean, String title, boolean isSyn) {
 		TaskResult taskResult = null;
 		try {
 			log.info("-------------------" + title + " test start\n");
@@ -59,17 +61,4 @@ public class TestBase {
 		}
 
 	}
-
-//	public static void deleteJmsFile() {
-//		InputStream in = Object.class.getResourceAsStream(
-//				"parallel.properties");
-//		Properties prop = new Properties();
-//		try {
-//			prop.load(in);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		File file = new File(prop.getProperty("hornetq.file"));
-//		file.deleteOnExit();
-//	}
 }

@@ -1,6 +1,5 @@
-package com.travelsky.pcc.reacc.tpc.client.test;
+package com.travelsky.pcc.reacc.tpc.client.inter.test;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,16 +8,14 @@ import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedException;
 
 
 public class RetryTest extends TestBase{
-	private Logger log = Logger.getLogger(getClass());
 	@Autowired
 	private TravelskyParallelComputingInterface<Object> travelskyParallelComputerInterface;
 
 	@Test
 	public void testTravelskyParallelComputerExcuteAsyn()
 			throws TaskExcutedException {
-		TtestBean bean = new TtestBean();
-		bean.setRetry(true);
-		requestParallelSync(bean, "asyn retry ", false);
+		testBaseP.setRetry(true);
+		requestParallelSync(testBaseP, "asyn retry ", false);
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
@@ -30,9 +27,8 @@ public class RetryTest extends TestBase{
 	public void testTravelskyParallelComputerExcuteSync()
 			throws TaskExcutedException,
 			com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException {
-		TtestBean bean = new TtestBean();
-		bean.setRetry(true);
-		requestParallelSync(bean, "syn retry ", true);
+		testBaseP.setRetry(true);
+		requestParallelSync(testBaseP, "syn retry ", true);
 
 	}
 

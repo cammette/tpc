@@ -9,7 +9,7 @@ public class IsDoneMonitorTest extends TestBase{
 	@Test
 	public void test() {
 		long start = new Date().getTime();
-		for(int i=0;i<100;i++){
+		for(int i=0;i<1;i++){
 			TtestBean bean = new TtestBean();
 //			bean.setSendListsize(10);
 //			bean.setSendSize(50);
@@ -17,7 +17,7 @@ public class IsDoneMonitorTest extends TestBase{
 		}
 		long end = new Date().getTime();
 		log.info("time :"+(end-start));
-		//syn 63250ms
+		//syn 322500ms
 		//asyn 9s
 			try {
 				Thread.sleep(50000);

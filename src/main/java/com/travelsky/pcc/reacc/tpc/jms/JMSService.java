@@ -1,7 +1,9 @@
 package com.travelsky.pcc.reacc.tpc.jms;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,6 +17,7 @@ import javax.jms.Session;
 
 import org.apache.log4j.Logger;
 
+import com.travelsky.pcc.reacc.tpc.client.test.Person;
 import com.travelsky.pcc.reacc.tpc.exception.AddTaskToQueueException;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyException;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
@@ -233,29 +236,37 @@ public class JMSService {
      * 获取queue队列的消息列表
      * @return
      */
-    public Enumeration browserQueue() {
+    public List<String> browserQueue() {
         return browse(queue);
     }
     /**
      * 获取replyQueue队列的消息列表
      * @return
      */
-    public Enumeration browserReplyQueue() {
+    public List<String> browserReplyQueue() {
         return browse(replyQueue);
     }
 
-    private Enumeration browse(Queue queue) {
-        if(null==queue){
-            return null;
-        }
+    private List<String> browse(Queue queue) {
         JmsConnectionSession jmsConnectionSession = null;
         QueueBrowser browser = null;
+        List<String> batchLists = null;
         try {
             jmsConnectionSession = (JmsConnectionSession) jmsConnectionPool
                     .getJmsConnectionSession();
             Session session = jmsConnectionSession.getSession();
             browser = session.createBrowser(queue);
-            return browser.getEnumeration();
+            Enumeration enumeration  = browser.getEnumeration();
+            if(enumeration.hasMoreElements()){
+              batchLists = new ArrayList<String>();
+            }
+            while (enumeration.hasMoreElements())
+            {
+               Message p = (Message)enumeration.nextElement();
+               String batchno = p.getStringProperty(StaticProperties.BATCH_NO);
+               batchLists.add(batchno);
+           }
+           return batchLists;
         } catch (Exception e) {
             try {
                 log.error("browse fail:queue name:" + queue.getQueueName(), e);

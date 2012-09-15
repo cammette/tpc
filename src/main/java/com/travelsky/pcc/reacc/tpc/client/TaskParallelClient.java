@@ -7,8 +7,6 @@ import java.util.Map;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 
-import org.hornetq.api.core.client.ClientMessage;
-
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyException;
 import com.travelsky.pcc.reacc.tpc.exception.TaskExcutedReplyTimeoutException;
@@ -43,7 +41,8 @@ public class TaskParallelClient implements TaskParallelClientInterface<Object> {
 		int i=0;
 		for (Object task : tasks) {
 		    i++;
-		    batchNo = batchNo+"_"+i;
+		     String unitPatchNo = batchNo+"_"+i;
+		     messageProperties.put(StaticProperties.UNIT_BATCH_NO, unitPatchNo);
 			 sendAndReplyClientService.send((Serializable) task, batchNo,messageProperties);
 		}
 		ObjectMessage msg = (ObjectMessage)sendAndReplyClientService.waitforReply(batchNo, excuteTimeout);

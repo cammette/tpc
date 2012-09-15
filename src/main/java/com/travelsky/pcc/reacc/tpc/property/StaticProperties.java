@@ -18,6 +18,10 @@ public class StaticProperties {
 	 */
 	public static final String BATCH_NO = "batch_no";
 	/**
+	 * 任务id属性key
+	 */
+	public static final String UNIT_BATCH_NO = "TaskUnit_batch_no";
+	/**
 	 * message里带jms属性 key
 	 */
 	public final static String JMS_PROPERTIRES_NAME="JMSXDeliveryCount";

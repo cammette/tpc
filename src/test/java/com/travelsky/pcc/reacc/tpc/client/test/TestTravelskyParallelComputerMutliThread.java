@@ -11,7 +11,7 @@ public class TestTravelskyParallelComputerMutliThread {
 	 */
 	public static void main(String[] args) {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
-				new String[] { "applicationContext-parallel.xml" });
+				new String[] { "integer-test.xml" });
 		final TravelskyParallelComputer travelskyParallelComputer = (TravelskyParallelComputer) context
 				.getBean("travelskyParallelComputer");
 		try {
@@ -19,16 +19,15 @@ public class TestTravelskyParallelComputerMutliThread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 1; i++) {
 			new Thread() {
 				public void run() {
-					for (int j = 0; j < 1000; j++) {
+					for (int j = 0; j < 1; j++) {
 						long a = System.currentTimeMillis();
 						TaskResult taskResult;
 						try {
-							taskResult = travelskyParallelComputer.excuteSyn(500, 20000);
-							System.out.println((System.currentTimeMillis()-a)+":"+taskResult.getTaskUnitResults().size());
-						} catch (TaskExcutedReplyTimeoutException e) {
+							travelskyParallelComputer.excuteAsyn(10);
+						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}

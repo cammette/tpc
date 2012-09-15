@@ -12,7 +12,6 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
 import org.apache.log4j.Logger;
-import org.hornetq.jms.client.HornetQObjectMessage;
 
 import com.travelsky.pcc.reacc.tpc.bean.TaskResult;
 import com.travelsky.pcc.reacc.tpc.client.TaskGroup;
@@ -62,7 +61,7 @@ public class TaskGroupListener implements MessageListener {
 			taskResult.setBeanName(messageProperties
 					.get(StaticProperties.ParallelComputerSpringBean));
 			for (TaskGroup<Object> taskGroup : taskGroups) {
-				taskBatchNo = batchNo + groupNo;
+				taskBatchNo = batchNo +"_"+ groupNo;
 				messageProperties.put(StaticProperties.BATCH_NO, taskBatchNo);
 				temp = (TaskResult) taskParallelClientInterface.executeSync(
 						taskGroup, taskBatchNo, waitForReplyGroupTask,
@@ -84,7 +83,7 @@ public class TaskGroupListener implements MessageListener {
 			}
 			else {
 				log.info("asyn----end");
-				notifyClientService.send(taskResult, null, null);
+				notifyClientService.send(taskResult,  taskResult.getBatchNo(), null);
 			}
 
 		} catch (JMSException e) {

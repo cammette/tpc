@@ -30,7 +30,7 @@ public class TestHornetqDuplicateMessage {
 				.getBean("EmbeddedJms");
 		
 		final JmsConnectionPool jmsConnectionPool = (JmsConnectionPool) context
-				.getBean("jmsConnectionPool");
+				.getBean("jmsClientNotifyConnectionPool");
 		final Queue queue = (Queue) context
 				.getBean("/queue/test");
 		JmsConnectionSession jmsConnection = jmsConnectionPool.getJmsConnectionSession();
@@ -41,15 +41,16 @@ public class TestHornetqDuplicateMessage {
 		
     	MessageConsumer consumer  = jmsConnection1.getSession().createConsumer(queue);
     	
-    	
+    	 DuplicateIDCache duplicateIDCache = embeddedJMS.getHornetQServer().getPostOffice().getDuplicateIDCache(new SimpleString("jms.queue.test"));
        long a = System.currentTimeMillis();
        for (int i = 0; i < 2; i++) {
     	   TextMessage message = jmsConnection.getSession().createTextMessage("test");
-           message.setStringProperty("_HQ_DUPL_ID", "test3"+i);
+    	   duplicateIDCache.addToCache(new SimpleString("test"+i).getData(), null);
     	   producer.send(message);
 	   }
-       DuplicateIDCache duplicateIDCache = embeddedJMS.getHornetQServer().getPostOffice().getDuplicateIDCache(new SimpleString("jms.queue.test"));
+      
       System.out.println( duplicateIDCache.contains(new SimpleString("test1").getData()));
+      System.out.println( duplicateIDCache.contains(new SimpleString("test0").getData()));
        System.out.println(System.currentTimeMillis()-a);
     	
      	for (int i = 0; i < 2; i++) {

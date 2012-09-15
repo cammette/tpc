@@ -40,18 +40,19 @@ public abstract class AbstractTaskListener implements MessageListener {
 						"the message must include the batch_no property");
 			}
 			String springBeanName = msg.getStringProperty(StaticProperties.ParallelComputerSpringBean);
-			if(duplicateMessageManager.contains(batchNo)){
-				log.info("exist batchNo:"+batchNo);
+			String taskBatchNo = msg.getStringProperty(StaticProperties.UNIT_BATCH_NO);
+			if(duplicateMessageManager.contains(taskBatchNo)){
 				TaskUnitResult taskUnitResult = new TaskUnitResult();
 				taskUnitResult.setBatchNo(batchNo);
 				taskUnitResult.setIsSuccess(false);
 				taskUnitResult.setMsg("also done");
 				taskContextManager.addTaskUnitResult(taskUnitResult,springBeanName);
+				log.info("exist batchNo:"+taskBatchNo);
 			}else{
-				log.info("add to cache:"+batchNo);
 				TaskUnitResult taskUnitResult = this.doMessage(msg, batchNo);
 				taskContextManager.addTaskUnitResult(taskUnitResult,springBeanName);
-				duplicateMessageManager.addToCache(batchNo);
+				duplicateMessageManager.addToCache(taskBatchNo);
+				log.info("add to cache:"+taskBatchNo);
 			}
 			
 		} catch (Throwable e) {

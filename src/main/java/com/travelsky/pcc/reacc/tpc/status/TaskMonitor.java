@@ -34,14 +34,11 @@ public class TaskMonitor {
 	
 	private long interval = 10;
 	
-	private long unReplyInterval = 1000;
 
 	public void init(){
 		isRunning = true;
 		TaskMonitorThead taskMonitorThead = new TaskMonitorThead();
 		new Thread(taskMonitorThead, "monitor_task-thread").start();
-		//UnknowSizeMonitorThread taskUnreplyMonitorThead = new UnknowSizeMonitorThread();
-		//new Thread(taskUnreplyMonitorThead, "monitor_task-unreply-thread").start();
 	}
 	
 	public void destroy(){
@@ -66,56 +63,12 @@ public class TaskMonitor {
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}
+
 			}
 		}
 		
 	}
 	
-	class UnknowSizeMonitorThread implements Runnable {
-
-		@Override
-		public void run() {
-			while(isRunning){
-//				try {
-//					List<TaskResult> taskResultsSizeUnkonw = taskContextManager.getUnknowTaskSize() ;
-//					Enumeration messageEnum = sendAndReplyClientService.browserQueue();
-//					List<TaskResult> temp = new ArrayList<TaskResult>();
-//					String batchNo="";
-//					Message message=null;
-//			        while (messageEnum.hasMoreElements())
-//			         {
-//			        	if(taskResultsSizeUnkonw.size()==0){
-//			        		break;
-//			        	}
-//			            message = (Message)messageEnum.nextElement();
-//			            batchNo=message.getStringProperty(StaticProperties.BATCH_NO);
-//			            if(null!=batchNo){
-//			            	for (TaskResult taskResult : taskResultsSizeUnkonw) {
-//								if(batchNo.equals(taskResult.getBatchNo())){
-//									temp.add(taskResult);
-//								}
-//							}
-//			            	taskResultsSizeUnkonw.removeAll(temp);
-//			            	temp.clear();
-//			            }
-//			        }
-//					if(taskResultsSizeUnkonw.size()>0){
-//						for (TaskResult taskResult : taskResultsSizeUnkonw) {
-//							taskResult.setEndTime(new Date());
-//							notifyClientService.send(taskResult, taskResult.getBatchNo(),null);
-//						}
-//					}
-//					taskContextManager.removeTaskResult(taskResultsSizeUnkonw);
-//					Thread.sleep(unReplyInterval);
-//				} catch (Throwable e) {
-//					e.printStackTrace();
-//				}
-			}
-
-		}
-
-	}
-
 	public JMSService getReplyClientService() {
 		return replyClientService;
 	}
@@ -137,14 +90,6 @@ public class TaskMonitor {
 
 	public void setTaskContextManager(TaskContextManager taskContextManager) {
 		this.taskContextManager = taskContextManager;
-	}
-
-	public long getUnReplyInterval() {
-		return unReplyInterval;
-	}
-
-	public void setUnReplyInterval(long unReplyInterval) {
-		this.unReplyInterval = unReplyInterval;
 	}
 
 	public JMSService getNotifyClientService() {

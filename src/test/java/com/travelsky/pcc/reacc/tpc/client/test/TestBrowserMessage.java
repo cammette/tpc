@@ -38,9 +38,9 @@ public class TestBrowserMessage {
     List<TaskGroup<Person>> taskGroups = new ArrayList<TaskGroup<Person>>();
     TaskGroup<Person> taskGroup = new TaskGroup<Person>();
     Person person = null;
-    for (int j = 0; j < 100; j++) {
+    for (int j = 0; j < 10; j++) {
       taskGroup = new TaskGroup<Person>();
-      for (int i = 0; i < 200; i++) {
+      for (int i = 0; i < 10; i++) {
           person = new Person();
           person.setId("j= "+j+" i= "+i + "");
           person.setName("name插入数据" + i+":"+j);
@@ -111,7 +111,7 @@ public class TestBrowserMessage {
     ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-messagetest.xml");
     final JMSService testService = (JMSService) context
         .getBean("testService");
-    String batchNo = "batchNo:1347593469401__98";
+    String batchNo = "batchNo:1347615469981__9";
     long start = System.currentTimeMillis();
     System.out.println("开始时间："+start);
     boolean result = testService.hasMessage(batchNo);
@@ -128,7 +128,7 @@ public class TestBrowserMessage {
     ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-messagetest.xml");
     final JMSService testService = (JMSService) context
         .getBean("testService");
-    String batch = "batchNo:1347593469401__98";
+    String batch = "batchNo:1347615469981__9";
     System.out.println("browserQueue测试：：：：：：：");
     long a = System.currentTimeMillis();
     System.out.println("开始时间："+a);
